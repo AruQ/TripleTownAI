@@ -1,5 +1,3 @@
-package logic;
-
 public class Cell
 {
 	private int x;
@@ -20,7 +18,7 @@ public class Cell
 
 	public int getX()
 	{
-		return x;
+		return this.x;
 	}
 
 	public void setX(int x)
@@ -30,7 +28,7 @@ public class Cell
 
 	public int getY()
 	{
-		return y;
+		return this.y;
 	}
 
 	public void setY(int y)
@@ -40,7 +38,7 @@ public class Cell
 
 	public String getType()
 	{
-		return type;
+		return this.type;
 	}
 
 	public void setType(String type)
@@ -53,9 +51,9 @@ public class Cell
 	{
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((type == null) ? 0 : type.hashCode());
-		result = prime * result + x;
-		result = prime * result + y;
+		result = (prime * result) + ((this.type == null) ? 0 : this.type.hashCode());
+		result = (prime * result) + this.x;
+		result = (prime * result) + this.y;
 		return result;
 	}
 
@@ -69,19 +67,18 @@ public class Cell
 		if (getClass() != obj.getClass())
 			return false;
 		Cell other = (Cell) obj;
-		if (type == null)
+		if (this.type == null)
 		{
 			if (other.type != null)
 				return false;
 		}
-		else if (!type.equals(other.type))
+		else if (!this.type.equals(other.type))
 			return false;
-		if (x != other.x)
+		if (this.x != other.x)
 			return false;
-		if (y != other.y)
+		if (this.y != other.y)
 			return false;
 		return true;
 	}
-
 
 }
