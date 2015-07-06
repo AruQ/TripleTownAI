@@ -1,3 +1,4 @@
+package logic;
 public class Item
 {
 	public final static Item EMPTY = new Item("Empty", 0);

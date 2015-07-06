@@ -1,4 +1,7 @@
+package logic;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -19,7 +22,6 @@ public class Matrix
 				setItemToMatrix(j, i, Item.EMPTY);
 			}
 		}
-
 	}
 
 	public void print()
@@ -35,6 +37,46 @@ public class Matrix
 			}
 			System.out.println();
 		}
+	}
+
+	public List<Cell> readMatrixFromFile(String path)
+	{
+		String line;
+		int i = 0;
+		BufferedReader buffer = null;
+		List<Cell> bears = new ArrayList<>();
+		try
+		{
+			buffer = new BufferedReader(new FileReader(new File(path)));
+			while ((line = buffer.readLine()) != null)
+			{
+				String[] vals = line.trim().split("\\s+");
+				for (int j = 0; j < this.DIMENSION; j++)
+				{
+					this.matrix[i][j] = ItemManager.getInstance().getItemFromID(
+							Integer.parseInt(vals[j]));
+					if (Integer.parseInt(vals[j]) == 10)
+					{
+						bears.add(new Cell(j, i, Item.BEAR.getName()));
+					}
+				}
+				i++;
+			}
+		} catch (NumberFormatException | IOException e)
+		{
+			e.printStackTrace();
+		} finally
+		{
+			try
+			{
+				buffer.close();
+			} catch (IOException e)
+			{
+				e.printStackTrace();
+			}
+		}
+		return bears;
+
 	}
 
 	public int getDimension()
@@ -90,18 +132,15 @@ public class Matrix
 			{
 				System.out.println("Dove vuoi posizionare " + gameManager.getNextItem().getName()
 						+ "?");
-				System.out.println("X=");
+				System.out.println("I=");
 				int x = Integer.parseInt(input.readLine());
 
-				System.out.println("Y=");
+				System.out.println("J=");
 				input = new BufferedReader(new InputStreamReader(System.in));
 				int y = Integer.parseInt(input.readLine());
-				placeNextItem = gameManager.placeNextItem(x, y);
+				placeNextItem = gameManager.placeNextItem(y, x);
 			} while (!placeNextItem);
 			gameManager.print();
 		}
-		// List<Cell> update = WorldJDLV.update(gameManager.getMatrix(),
-		// new Cell(0, 0, Item.GRASS.getName()));
-		// System.out.println(update);
 	}
 }
