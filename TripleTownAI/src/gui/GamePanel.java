@@ -110,7 +110,7 @@ public class GamePanel extends Pane
 		for (Item item : items)
 		{
 			if (item != Item.EMPTY)
-				imageLoader.insertImage(item.getName(), ".\\Sprites\\"
+				imageLoader.insertImage(item.getName(), "file:Sprites\\"
 						+ item.getName().toLowerCase() + ".png");
 		}
 
