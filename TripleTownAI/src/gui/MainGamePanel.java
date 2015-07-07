@@ -12,8 +12,9 @@ import logic.GameManager;
 public class MainGamePanel extends Application
 {
 	private final GameManager gameManager = new GameManager();
-	private final GameMenuPane gameMenuPane = new GameMenuPane(this.gameManager);
-	private final Pane gamePane = new GamePane(this.gameManager, this.gameMenuPane);
+	private final GameMenuPane gameMenuPane = new GameMenuPane(gameManager);
+	private final Pane gamePane = new GamePane(gameManager, gameMenuPane);
+	private Stage primaryStage;
 
 	public static void main(String[] args)
 	{
@@ -24,59 +25,35 @@ public class MainGamePanel extends Application
 	public void start(Stage primaryStage)
 	{
 
-		// Pane canvas = new Pane();
-		// canvas.setStyle("-fx-background-color: black;");
-		// canvas.setPrefSize(500, 500);
-		// Circle circle = new Circle(50, Color.BLUE);
-		// circle.relocate(20, 20);
-		// Rectangle rectangle = new Rectangle(100, 100, Color.RED);
-		// rectangle.relocate(0, 0);
-		// canvas.getChildren().addAll(circle, rectangle);
-		// primaryStage.setScene(new Scene(canvas));
-		// primaryStage.show();
-
-		// primaryStage.setTitle("Hello World!");
-		// Button btn = new Button();
-		// btn.setText("Say 'Hello World'");
-		// btn.setOnAction(new EventHandler<ActionEvent>()
-		// {
-		//
-		// @Override
-		// public void handle(ActionEvent event)
-		// {
-		// System.out.println("Hello World!");
-		// }
-		// });
-		//
-		// StackPane root = new StackPane();
-		// root.getChildren().add(btn);
-		// primaryStage.setScene(new Scene(root, 300, 250));
-		// primaryStage.show();
-
-		SplitPane sp = createSplitPane();
-		primaryStage.setResizable(false);
-		primaryStage.setScene(new Scene(sp));
-		primaryStage
-				.getScene()
-				.getStylesheets()
-				.add(".static-split .split-pane *.horizontal-grabber { -fx-background-color: transparent; }.static-split .split-pane *.vertical-grabber { -fx-background-color: transparent; }");
+		this.primaryStage = primaryStage;
+		MainPane mainPane = new MainPane(this);
+		primaryStage.setScene(new Scene(mainPane));
 		primaryStage.show();
-
-		disableDividers(sp);
+		// SplitPane sp = createSplitPane();
+		// primaryStage.setResizable(false);
+		// primaryStage.setScene(new Scene(sp));
+		// // primaryStage
+		// // .getScene()
+		// // .getStylesheets()
+		// //
+		// .add(".static-split .split-pane *.horizontal-grabber { -fx-background-color: transparent; }.static-split .split-pane *.vertical-grabber { -fx-background-color: transparent; }");
+		// primaryStage.show();
+		//
+		// disableDividers(sp);
 	}
 
 	private SplitPane createSplitPane()
 	{
 		SplitPane sp = new SplitPane();
-		double width = GamePane.PANE_DIMENSION + ((GamePane.PANE_DIMENSION * 30) / 100);
+		double width = GamePane.PANE_DIMENSION + GameMenuPane.GAME_MENU_PANEL_DIMENSION;
 		sp.setPrefSize(width, GamePane.PANE_DIMENSION);
 		final StackPane sp1 = new StackPane();
-		sp1.getChildren().add(this.gamePane);
+		sp1.getChildren().add(gamePane);
 		final StackPane sp2 = new StackPane();
-		sp2.getChildren().add(this.gameMenuPane);
+		sp2.getChildren().add(gameMenuPane);
 		sp.getItems().addAll(sp1, sp2);
 		sp.setDividerPositions((float) (GamePane.PANE_DIMENSION / width));
-		sp.getStyleClass().add("static-split");
+		// sp.getStyleClass().add("static-split");
 		return sp;
 	}
 
@@ -86,5 +63,18 @@ public class MainGamePanel extends Application
 		{
 			divider.setMouseTransparent(true);
 		}
+	}
+
+	public void startGame()
+	{
+		SplitPane sp = createSplitPane();
+		primaryStage.setResizable(false);
+		primaryStage.setScene(new Scene(sp));
+		disableDividers(sp);
+	}
+
+	public void closeGame()
+	{
+		javafx.application.Platform.exit();
 	}
 }
