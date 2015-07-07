@@ -95,10 +95,13 @@ public class GamePanel extends Pane
 			{
 				if (matrix.getItemFromPosition(j, i) == Item.EMPTY)
 					continue;
-				double graphicX = ((j * this.getPrefWidth()) / matrix.getDimension());
-				double graphicY = ((i * this.getPrefHeight()) / matrix.getDimension());
+
 				ImageView imageView = new ImageView(imageLoader.getImage(matrix
 						.getItemFromPosition(j, i).getName()));
+				double graphicX = ((j * this.getPrefWidth()) / matrix.getDimension())
+						+ ((MAX_IMAGE_DIMENSION - imageView.getImage().getWidth()) / 2);
+				double graphicY = ((i * this.getPrefHeight()) / matrix.getDimension())
+						+ ((MAX_IMAGE_DIMENSION - imageView.getImage().getHeight()) / 2);
 				imageView.relocate(graphicX,
 						graphicY);
 				itemGroup.getChildren().addAll(imageView);
