@@ -1,6 +1,7 @@
 package logic;
 
-public  class WorldJDLV{
+public class WorldJDLV
+{
 
 	public WorldJDLV()
 	{
@@ -230,7 +231,8 @@ public  class WorldJDLV{
 		return avaibleMovements;
 	}
 
-	public static java.util.List<BearMovement> calculateNewPositionBears(Matrix matrix)
+	public static java.util.List<BearMovement> calculateNewPositionBears(Matrix matrix,
+			java.util.List<Cell> tombstones)
 	{
 		java.util.List<Cell> cells = matrix.toCells();
 		java.util.List<BearMovement> avaibleMovements = new java.util.ArrayList();
@@ -257,6 +259,8 @@ public  class WorldJDLV{
 		// ---- END - addInMapping ----
 		it.unical.mat.jdlv.program.JDLV_Logger.getInstance().logInfoMessage(
 				"Add out-mapping 'avaibleMovements::fromTo' in module findBearMovements.");
+		it.unical.mat.jdlv.program.JDLV_Logger.getInstance().logInfoMessage(
+				"Add out-mapping 'tombstones::tombstone' in module findBearMovements.");
 
 		// ---- START - prepareJDLVCall ----
 		try
@@ -279,9 +283,8 @@ public  class WorldJDLV{
 			_JDLV_PROGRAM_findBearMovements
 					.addText(":- #count{X2,Y2 : fromTo(X1, Y1, X2, Y2)} > 1, matrix(X1, Y1, \"Bear\")." + '\n');
 			_JDLV_PROGRAM_findBearMovements.addText("freeCell(X, Y) :- fromTo(X, Y, _, _)." + '\n');
-			_JDLV_PROGRAM_findBearMovements.addText("busyCell(X, Y) :- fromTo(_, _, X, Y)." + '\n');
 			_JDLV_PROGRAM_findBearMovements
-					.addText("freeCell(X, Y) :- matrix(X, Y, \"Empty\"), not busyCell(X, Y)." + '\n');
+					.addText("freeCell(X, Y) :- matrix(X, Y, \"Empty\")." + '\n');
 			_JDLV_PROGRAM_findBearMovements
 					.addText(":- fromTo(X, Y, X1, Y1), not freeCell(X1, Y1)." + '\n');
 			_JDLV_PROGRAM_findBearMovements
@@ -290,6 +293,10 @@ public  class WorldJDLV{
 					.addText("adjacent(X, Y, X1, Y) :- matrix(X, Y, _), matrix(X1, Y, _), X = X1 + 1." + '\n');
 			_JDLV_PROGRAM_findBearMovements
 					.addText("adjacent(X, Y, X1, Y1) :- adjacent(X1, Y1, X, Y)." + '\n');
+			_JDLV_PROGRAM_findBearMovements
+					.addText("movedBear(X, Y) :- fromTo(X, Y, X2, Y2)." + '\n');
+			_JDLV_PROGRAM_findBearMovements
+					.addText("tombstone(X, Y, \"Tombstone\") :- matrix(X, Y, \"Bear\"), not movedBear(X, Y)." + '\n');
 			_JDLV_PROGRAM_findBearMovements.getFiles().clear();
 			_JDLV_INVOCATION_findBearMovements.setNumberOfModels(1);
 			_JDLV_PROGRAM_BUFFER_findBearMovements.append("");
@@ -315,6 +322,8 @@ public  class WorldJDLV{
 						.nextModel();
 				it.unical.mat.jdlv.program.TypeSolver.loadPredicate(avaibleMovements, "fromTo",
 						_temporary_JDLV_MODELfindBearMovements, BearMovement.class);
+				it.unical.mat.jdlv.program.TypeSolver.loadPredicate(tombstones, "tombstone",
+						_temporary_JDLV_MODELfindBearMovements, Cell.class);
 				it.unical.mat.jdlv.program.JDLV_Logger.getInstance().logInfoMessage(
 						"Process new answer_set"
 								+ '\n'
@@ -325,7 +334,13 @@ public  class WorldJDLV{
 								+ " elements"
 								+ '\n'
 								+ it.unical.mat.jdlv.program.JDLV_Logger.getInstance()
-										.getPrettyObject(avaibleMovements, 0));
+										.getPrettyObject(avaibleMovements, 0)
+								+ "tombstones "
+								+ tombstones.size()
+								+ " elements"
+								+ '\n'
+								+ it.unical.mat.jdlv.program.JDLV_Logger.getInstance()
+										.getPrettyObject(tombstones, 0));
 			}
 			if (_JDLV_INVOCATION_findBearMovements.haveModel() == false)
 			{}
@@ -345,4 +360,3 @@ public  class WorldJDLV{
 		return avaibleMovements;
 	}
 }
-
