@@ -11,8 +11,9 @@ import java.util.List;
 public class Matrix
 {
 	private int emptyCell = 0;
-	private final int DIMENSION = 6;
+	public static final int DIMENSION = 6;
 	private final Item[][] matrix = new Item[this.DIMENSION][this.DIMENSION];
+	private int score = 0;
 
 	public Matrix()
 	{
@@ -23,6 +24,11 @@ public class Matrix
 				setItemToMatrix(j, i, Item.EMPTY);
 			}
 		}
+	}
+
+	public Integer getScore()
+	{
+		return this.score;
 	}
 
 	public void print()
@@ -107,6 +113,7 @@ public class Matrix
 		{
 			this.emptyCell--;
 		}
+		this.score += itemType.getScore();
 		this.matrix[y][x] = itemType;
 	}
 

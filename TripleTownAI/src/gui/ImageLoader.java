@@ -7,9 +7,17 @@ import javafx.scene.image.Image;
 public class ImageLoader
 {
 
+	private static ImageLoader instance;
 	private final HashMap<String, Image> images;
 
-	public ImageLoader()
+	public static ImageLoader getInstance()
+	{
+		if (instance == null)
+			instance = new ImageLoader();
+		return instance;
+	}
+
+	private ImageLoader()
 	{
 		this.images = new HashMap<String, Image>();
 	}
@@ -28,7 +36,5 @@ public class ImageLoader
 	{
 		return this.images.get(key);
 	}
-
-
 
 }
