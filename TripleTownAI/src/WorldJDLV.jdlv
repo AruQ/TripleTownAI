@@ -38,6 +38,29 @@ public class WorldJDLV
 	  	return avaibleMovements;
 	}
 	
+	public static java.util.List<BearMovement> calculateNewPositionBears(Matrix matrix)
+	{
+		java.util.List<Cell> cells = matrix.toCells ();
+		java.util.List<BearMovement> avaibleMovements = new java.util.ArrayList();
+		<# (findBearMovements)
+		IN = cells::matrix;
+		OUT = avaibleMovements :: fromTo;
+		fromTo(X,Y,X1,Y1)| stay(X,Y,X1,Y1):-matrix(X,Y,"Bear"),adjacent(X,Y,X1,Y1).
+		:-fromTo(X1,Y1,X2,Y2),fromTo(X2,Y2,X1,Y1).
+		:-fromTo(X1,Y1,X2,Y2),from(X3,Y3,X2,Y2),X3!=X1.
+		:-fromTo(X1,Y1,X2,Y2),from(X3,Y3,X2,Y2),Y3!=Y1.
+		:-#count{X2,Y2:fromTo(X1,Y1,X2,Y2)}>1,matrix(X1,Y1,"Bear").
+		freeCell(X,Y):-fromTo(X,Y,_,_).
+		busyCell(X,Y):-fromTo(_,_,X,Y).
+		freeCell(X,Y):-matrix(X,Y,"Empty"),not busyCell(X,Y).
+		:-fromTo(X,Y,X1,Y1),not freeCell(X1,Y1).
+		adjacent (X,Y,X,Y1):- matrix (X,Y,_),matrix (X,Y1,_), Y=Y1+1.
+		adjacent (X,Y,X1,Y):- matrix (X,Y,_),matrix (X1,Y,_), X=X1+1.
+		adjacent (X,Y,X1,Y1) :- adjacent (X1,Y1,X,Y).
+		#>
+	  	return avaibleMovements;
+	}
+	
 	
 	
 

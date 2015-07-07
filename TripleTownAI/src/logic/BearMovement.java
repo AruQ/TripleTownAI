@@ -7,6 +7,9 @@ public class BearMovement
 	private int newX;
 	private int newY;
 
+	public BearMovement()
+	{
+	}
 	public BearMovement(int oldX, int oldY, int newX, int newY)
 	{
 		super();
@@ -18,7 +21,7 @@ public class BearMovement
 
 	public int getOldX()
 	{
-		return this.oldX;
+		return oldX;
 	}
 
 	public void setOldX(int oldX)
@@ -28,7 +31,7 @@ public class BearMovement
 
 	public int getOldY()
 	{
-		return this.oldY;
+		return oldY;
 	}
 
 	public void setOldY(int oldY)
@@ -38,7 +41,7 @@ public class BearMovement
 
 	public int getNewX()
 	{
-		return this.newX;
+		return newX;
 	}
 
 	public void setNewX(int newX)
@@ -48,7 +51,7 @@ public class BearMovement
 
 	public int getNewY()
 	{
-		return this.newY;
+		return newY;
 	}
 
 	public void setNewY(int newY)
@@ -61,10 +64,10 @@ public class BearMovement
 	{
 		final int prime = 31;
 		int result = 1;
-		result = (prime * result) + this.newX;
-		result = (prime * result) + this.newY;
-		result = (prime * result) + this.oldX;
-		result = (prime * result) + this.oldY;
+		result = (prime * result) + newX;
+		result = (prime * result) + newY;
+		result = (prime * result) + oldX;
+		result = (prime * result) + oldY;
 		return result;
 	}
 
@@ -78,15 +81,22 @@ public class BearMovement
 		if (getClass() != obj.getClass())
 			return false;
 		BearMovement other = (BearMovement) obj;
-		if (this.newX != other.newX)
+		if (newX != other.newX)
 			return false;
-		if (this.newY != other.newY)
+		if (newY != other.newY)
 			return false;
-		if (this.oldX != other.oldX)
+		if (oldX != other.oldX)
 			return false;
-		if (this.oldY != other.oldY)
+		if (oldY != other.oldY)
 			return false;
 		return true;
+	}
+
+	@Override
+	public String toString()
+	{
+		return "BearMovement [oldX=" + oldX + ", oldY=" + oldY + ", newX=" + newX + ", newY="
+				+ newY + "]";
 	}
 
 }

@@ -40,8 +40,9 @@ public class GamePanel extends Pane
 		this.gameManager = gameManager;
 		matrix = gameManager.getMatrix();
 		setBackground(new Background(new BackgroundImage(
-				new Image(".\\Sprites\\grass-pattern.png"), BackgroundRepeat.REPEAT,
-				BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
+				new Image(
+						"file:Sprites\\grass-pattern.png"), BackgroundRepeat.REPEAT,
+						BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
 		setPrefSize(MAX_IMAGE_DIMENSION * matrix.getDimension(),
 				MAX_IMAGE_DIMENSION * matrix.getDimension());
 
