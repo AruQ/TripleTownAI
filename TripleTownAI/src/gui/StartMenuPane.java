@@ -15,12 +15,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-public class MainPane extends Pane
+public class StartMenuPane extends Pane
 {
 	private final Font font = new Font("Valken Regular", 40);
-	private final MainGamePanel mainGamePanel;
+	private final MainGameApplication mainGamePanel;
 
-	public MainPane(MainGamePanel mainGamePanel)
+	public StartMenuPane(MainGameApplication mainGamePanel)
 	{
 		this.mainGamePanel = mainGamePanel;
 		setPrefSize(GamePane.PANE_DIMENSION + GameMenuPane.GAME_MENU_PANEL_DIMENSION,
@@ -37,34 +37,34 @@ public class MainPane extends Pane
 	{
 		Text play = createText("PLAY", 100, GamePane.PANE_DIMENSION / 2);
 		play.setOnMouseReleased(new EventHandler<MouseEvent>()
-				{
+		{
 			@Override
 			public void handle(MouseEvent mouseEvent)
 			{
-				mainGamePanel.startGame();
+				StartMenuPane.this.mainGamePanel.startGame();
 			}
-				});
-		this.getChildren().add(play);
+		});
+		getChildren().add(play);
 	}
 
 	private void addExitButton()
 	{
-		Text exit = createText("EXIT", this.getPrefWidth() - 150, GamePane.PANE_DIMENSION / 2);
+		Text exit = createText("EXIT", getPrefWidth() - 150, GamePane.PANE_DIMENSION / 2);
 		exit.setOnMouseReleased(new EventHandler<MouseEvent>()
-				{
+		{
 			@Override
 			public void handle(MouseEvent mouseEvent)
 			{
-				mainGamePanel.closeGame();
+				StartMenuPane.this.mainGamePanel.closeGame();
 			}
-				});
-		this.getChildren().add(exit);
+		});
+		getChildren().add(exit);
 	}
 
 	Text createText(String stringText, double x, double y)
 	{
 		Text text = new Text(stringText);
-		text.setFont(font);
+		text.setFont(this.font);
 		text.setFill(Color.WHITE);
 		text.setStyle("-fx-stroke: firebrick;");
 		text.relocate(x, y);
@@ -90,7 +90,8 @@ public class MainPane extends Pane
 	{
 		Image imageLogo = new Image("file:Sprites\\logo.png");
 		ImageView logo = new ImageView(imageLogo);
-		logo.relocate((this.getPrefWidth() - imageLogo.getWidth()) / 2, 10);
-		this.getChildren().add(logo);
+		logo.relocate((getPrefWidth() - imageLogo.getWidth()) / 2, 10);
+		getChildren().add(logo);
 	}
+
 }

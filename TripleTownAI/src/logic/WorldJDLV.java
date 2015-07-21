@@ -258,7 +258,7 @@ public class WorldJDLV
 
 		// ---- END - addInMapping ----
 		it.unical.mat.jdlv.program.JDLV_Logger.getInstance().logInfoMessage(
-				"Add out-mapping 'avaibleMovements::fromTo' in module findBearMovements.");
+				"Add out-mapping 'avaibleMovements::move' in module findBearMovements.");
 		it.unical.mat.jdlv.program.JDLV_Logger.getInstance().logInfoMessage(
 				"Add out-mapping 'tombstones::tombstone' in module findBearMovements.");
 
@@ -273,20 +273,20 @@ public class WorldJDLV
 			_JDLV_PROGRAM_findBearMovements.addText(_JDLV_PROGRAM_BUFFER_findBearMovements
 					.toString());
 			_JDLV_PROGRAM_findBearMovements
-					.addText("fromTo(X, Y, X1, Y1) v stay(X, Y, X1, Y1) :- matrix(X, Y, \"Bear\"), adjacent(X, Y, X1, Y1)." + '\n');
+					.addText("move(X, Y, X1, Y1) v notMove(X, Y, X1, Y1) :- matrix(X, Y, \"Bear\"), adjacent(X, Y, X1, Y1)." + '\n');
 			_JDLV_PROGRAM_findBearMovements
-					.addText(":- fromTo(X1, Y1, X2, Y2), fromTo(X2, Y2, X1, Y1)." + '\n');
+					.addText(":- move(X1, Y1, X2, Y2), move(X2, Y2, X1, Y1)." + '\n');
 			_JDLV_PROGRAM_findBearMovements
-					.addText(":- fromTo(X1, Y1, X2, Y2), from(X3, Y3, X2, Y2), X3 != X1." + '\n');
+					.addText(":- move(X1, Y1, X2, Y2), from(X3, Y3, X2, Y2), X3 != X1." + '\n');
 			_JDLV_PROGRAM_findBearMovements
-					.addText(":- fromTo(X1, Y1, X2, Y2), from(X3, Y3, X2, Y2), Y3 != Y1." + '\n');
+					.addText(":- move(X1, Y1, X2, Y2), from(X3, Y3, X2, Y2), Y3 != Y1." + '\n');
 			_JDLV_PROGRAM_findBearMovements
-					.addText(":- #count{X2,Y2 : fromTo(X1, Y1, X2, Y2)} > 1, matrix(X1, Y1, \"Bear\")." + '\n');
-			_JDLV_PROGRAM_findBearMovements.addText("freeCell(X, Y) :- fromTo(X, Y, _, _)." + '\n');
+					.addText(":- #count{X2,Y2 : move(X1, Y1, X2, Y2)} > 1, matrix(X1, Y1, \"Bear\")." + '\n');
+			_JDLV_PROGRAM_findBearMovements.addText("freeCell(X, Y) :- move(X, Y, _, _)." + '\n');
 			_JDLV_PROGRAM_findBearMovements
 					.addText("freeCell(X, Y) :- matrix(X, Y, \"Empty\")." + '\n');
 			_JDLV_PROGRAM_findBearMovements
-					.addText(":- fromTo(X, Y, X1, Y1), not freeCell(X1, Y1)." + '\n');
+					.addText(":- move(X, Y, X1, Y1), not freeCell(X1, Y1)." + '\n');
 			_JDLV_PROGRAM_findBearMovements
 					.addText("adjacent(X, Y, X, Y1) :- matrix(X, Y, _), matrix(X, Y1, _), Y = Y1 + 1." + '\n');
 			_JDLV_PROGRAM_findBearMovements
@@ -294,7 +294,7 @@ public class WorldJDLV
 			_JDLV_PROGRAM_findBearMovements
 					.addText("adjacent(X, Y, X1, Y1) :- adjacent(X1, Y1, X, Y)." + '\n');
 			_JDLV_PROGRAM_findBearMovements
-					.addText("movedBear(X, Y) :- fromTo(X, Y, X2, Y2)." + '\n');
+					.addText("movedBear(X, Y) :- move(X, Y, X2, Y2)." + '\n');
 			_JDLV_PROGRAM_findBearMovements
 					.addText("tombstone(X, Y, \"Tombstone\") :- matrix(X, Y, \"Bear\"), not movedBear(X, Y)." + '\n');
 			_JDLV_PROGRAM_findBearMovements.getFiles().clear();
@@ -320,7 +320,7 @@ public class WorldJDLV
 			{
 				it.unical.mat.wrapper.Model _temporary_JDLV_MODELfindBearMovements = _BUFFERED_HANDLER_findBearMovements
 						.nextModel();
-				it.unical.mat.jdlv.program.TypeSolver.loadPredicate(avaibleMovements, "fromTo",
+				it.unical.mat.jdlv.program.TypeSolver.loadPredicate(avaibleMovements, "move",
 						_temporary_JDLV_MODELfindBearMovements, BearMovement.class);
 				it.unical.mat.jdlv.program.TypeSolver.loadPredicate(tombstones, "tombstone",
 						_temporary_JDLV_MODELfindBearMovements, Cell.class);
@@ -358,5 +358,140 @@ public class WorldJDLV
 
 		// ---- END - prepareJDLVCall ----
 		return avaibleMovements;
+	}
+
+	public static java.util.List<Cell> aiPlayer(Matrix matrix, java.util.List<Cell> maxElems,
+			Item nextItem)
+	{
+		java.util.List<Item> items = ItemManager.getInstance().getItems();
+		java.util.List<Cell> cells = matrix.toCells();
+		String nextItemName = nextItem.getName();
+		java.util.List<Cell> places = new java.util.ArrayList();
+
+		// ---- START - startProgram ----
+		it.unical.mat.jdlv.program.JDLV_Logger.getInstance().logInfoMessage(
+				"Creation aiPlayer JDLV module.");
+		it.unical.mat.wrapper.DLVInputProgram _JDLV_PROGRAM_aiPlayer = new it.unical.mat.wrapper.DLVInputProgramImpl();
+		_JDLV_PROGRAM_aiPlayer.cleanText();
+		java.lang.StringBuffer _JDLV_PROGRAM_BUFFER_aiPlayer = new java.lang.StringBuffer();
+		it.unical.mat.wrapper.DLVInvocation _JDLV_INVOCATION_aiPlayer;
+
+		// ---- END - startProgram ----
+
+		// ---- START - addInMapping ----
+		_JDLV_PROGRAM_aiPlayer.addText(it.unical.mat.jdlv.program.TypeSolver.getNameTranslation(
+				cells, "matrix"));
+		it.unical.mat.jdlv.program.JDLV_Logger.getInstance().logInfoMessage(
+				"Add in-mapping 'cells::matrix' in module aiPlayer:"
+						+ it.unical.mat.jdlv.program.JDLV_Logger.getInstance().getPrettyCode(
+								it.unical.mat.jdlv.program.TypeSolver.getNameTranslation(cells,
+										"matrix"), 0));
+
+		// ---- END - addInMapping ----
+
+		// ---- START - addInMapping ----
+		_JDLV_PROGRAM_aiPlayer.addText(it.unical.mat.jdlv.program.TypeSolver.getNameTranslation(
+				items, "item"));
+		it.unical.mat.jdlv.program.JDLV_Logger.getInstance().logInfoMessage(
+				"Add in-mapping 'items::item' in module aiPlayer:"
+						+ it.unical.mat.jdlv.program.JDLV_Logger.getInstance().getPrettyCode(
+								it.unical.mat.jdlv.program.TypeSolver.getNameTranslation(items,
+										"item"), 0));
+
+		// ---- END - addInMapping ----
+
+		// ---- START - addInMapping ----
+		_JDLV_PROGRAM_aiPlayer.addText(it.unical.mat.jdlv.program.TypeSolver.getNameTranslation(
+				nextItemName, "nextItem"));
+		it.unical.mat.jdlv.program.JDLV_Logger.getInstance().logInfoMessage(
+				"Add in-mapping 'nextItemName::nextItem' in module aiPlayer:"
+						+ it.unical.mat.jdlv.program.JDLV_Logger.getInstance().getPrettyCode(
+								it.unical.mat.jdlv.program.TypeSolver.getNameTranslation(
+										nextItemName, "nextItem"), 0));
+
+		// ---- END - addInMapping ----
+
+		// ---- START - addInMapping ----
+		_JDLV_PROGRAM_aiPlayer.addText(it.unical.mat.jdlv.program.TypeSolver.getNameTranslation(
+				maxElems, "maxElement"));
+		it.unical.mat.jdlv.program.JDLV_Logger.getInstance().logInfoMessage(
+				"Add in-mapping 'maxElems::maxElement' in module aiPlayer:"
+						+ it.unical.mat.jdlv.program.JDLV_Logger.getInstance().getPrettyCode(
+								it.unical.mat.jdlv.program.TypeSolver.getNameTranslation(maxElems,
+										"maxElement"), 0));
+
+		// ---- END - addInMapping ----
+		it.unical.mat.jdlv.program.JDLV_Logger.getInstance().logInfoMessage(
+				"Add out-mapping 'places::place' in module aiPlayer.");
+
+		// ---- START - prepareJDLVCall ----
+		try
+		{
+
+			_JDLV_INVOCATION_aiPlayer = it.unical.mat.wrapper.DLVWrapper.getInstance()
+					.createInvocation(
+							it.unical.mat.jdlv.util.JdlvProperties.getInstance()
+									.getDlvExecutablePath());
+			_JDLV_PROGRAM_aiPlayer.addText(_JDLV_PROGRAM_BUFFER_aiPlayer.toString());
+			_JDLV_PROGRAM_aiPlayer.getFiles().clear();
+			_JDLV_PROGRAM_aiPlayer
+					.addFile("C:/Users/Alessandro/Unical/Artificial Intelligence/Workspace/TripleTown/tripleTownAI.dl");
+			_JDLV_INVOCATION_aiPlayer.setNumberOfModels(1);
+			_JDLV_PROGRAM_BUFFER_aiPlayer.append("");
+			_JDLV_INVOCATION_aiPlayer.setInputProgram(_JDLV_PROGRAM_aiPlayer);
+			it.unical.mat.wrapper.ModelBufferedHandler _BUFFERED_HANDLER_aiPlayer = new it.unical.mat.wrapper.ModelBufferedHandler(
+					_JDLV_INVOCATION_aiPlayer);
+			it.unical.mat.jdlv.program.JDLV_Logger
+					.getInstance()
+					.logInfoMessage(
+							"Start execution aiPlayer program: executablePath='"
+									+ it.unical.mat.jdlv.util.JdlvProperties.getInstance()
+											.getDlvExecutablePath()
+									+ "', options='"
+									+ _JDLV_INVOCATION_aiPlayer.getOptionsString()
+									+ "'"
+									+ '\n'
+									+ "Code execution: "
+									+ it.unical.mat.jdlv.program.JDLV_Logger.getInstance()
+											.getPrettyCode(
+													_JDLV_INVOCATION_aiPlayer.getInputProgram()
+															.getCompleteText(), 0)
+									+ '\n'
+									+ "Files execution: C:/Users/Alessandro/Unical/Artificial Intelligence/Workspace/TripleTown/tripleTownAI.dl");
+			_JDLV_INVOCATION_aiPlayer.run();
+			while (_BUFFERED_HANDLER_aiPlayer.hasMoreModels())
+			{
+				it.unical.mat.wrapper.Model _temporary_JDLV_MODELaiPlayer = _BUFFERED_HANDLER_aiPlayer
+						.nextModel();
+				it.unical.mat.jdlv.program.TypeSolver.loadPredicate(places, "place",
+						_temporary_JDLV_MODELaiPlayer, Cell.class);
+				it.unical.mat.jdlv.program.JDLV_Logger.getInstance().logInfoMessage(
+						"Process new answer_set"
+								+ '\n'
+								+ "Results:"
+								+ '\n'
+								+ "places "
+								+ places.size()
+								+ " elements"
+								+ '\n'
+								+ it.unical.mat.jdlv.program.JDLV_Logger.getInstance()
+										.getPrettyObject(places, 0));
+			}
+			if (_JDLV_INVOCATION_aiPlayer.haveModel() == false)
+			{}
+			if (!_JDLV_INVOCATION_aiPlayer.getErrors().isEmpty())
+			{
+				throw new java.lang.RuntimeException(_JDLV_INVOCATION_aiPlayer.getErrors().get(0)
+						.getText());
+			}
+		} catch (java.lang.Throwable _JDLV_EXCEPTION_aiPlayer)
+		{
+			it.unical.mat.jdlv.program.JDLV_Logger.getInstance().logErrorMessage(
+					_JDLV_EXCEPTION_aiPlayer.getMessage());
+		}
+		_JDLV_PROGRAM_aiPlayer.cleanText();
+
+		// ---- END - prepareJDLVCall ----
+		return places;
 	}
 }

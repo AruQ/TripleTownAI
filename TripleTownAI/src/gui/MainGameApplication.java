@@ -4,16 +4,15 @@ import javafx.application.Application;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.SplitPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import logic.GameManager;
 
-public class MainGamePanel extends Application
+public class MainGameApplication extends Application
 {
 	private final GameManager gameManager = new GameManager();
-	private final GameMenuPane gameMenuPane = new GameMenuPane(gameManager);
-	private final Pane gamePane = new GamePane(gameManager, gameMenuPane);
+	private final GameMenuPane gameMenuPane = new GameMenuPane(this, this.gameManager);
+	private final GamePane gamePane = new GamePane(this.gameManager, this.gameMenuPane);
 	private Stage primaryStage;
 
 	public static void main(String[] args)
@@ -26,7 +25,7 @@ public class MainGamePanel extends Application
 	{
 
 		this.primaryStage = primaryStage;
-		MainPane mainPane = new MainPane(this);
+		StartMenuPane mainPane = new StartMenuPane(this);
 		primaryStage.setScene(new Scene(mainPane));
 		primaryStage.show();
 		// SplitPane sp = createSplitPane();
@@ -48,9 +47,9 @@ public class MainGamePanel extends Application
 		double width = GamePane.PANE_DIMENSION + GameMenuPane.GAME_MENU_PANEL_DIMENSION;
 		sp.setPrefSize(width, GamePane.PANE_DIMENSION);
 		final StackPane sp1 = new StackPane();
-		sp1.getChildren().add(gamePane);
+		sp1.getChildren().add(this.gamePane);
 		final StackPane sp2 = new StackPane();
-		sp2.getChildren().add(gameMenuPane);
+		sp2.getChildren().add(this.gameMenuPane);
 		sp.getItems().addAll(sp1, sp2);
 		sp.setDividerPositions((float) (GamePane.PANE_DIMENSION / width));
 		// sp.getStyleClass().add("static-split");
@@ -68,13 +67,19 @@ public class MainGamePanel extends Application
 	public void startGame()
 	{
 		SplitPane sp = createSplitPane();
-		primaryStage.setResizable(false);
-		primaryStage.setScene(new Scene(sp));
+		this.primaryStage.setResizable(false);
+		this.primaryStage.setScene(new Scene(sp));
 		disableDividers(sp);
 	}
 
 	public void closeGame()
 	{
 		javafx.application.Platform.exit();
+	}
+
+	public void graphicUpdate()
+	{
+		this.gameMenuPane.update();
+		this.gamePane.update();
 	}
 }

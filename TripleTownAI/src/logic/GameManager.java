@@ -14,8 +14,7 @@ public class GameManager
 	{
 		// iniziaizeMatrix();
 		this.matrix.readMatrixFromFile("./matrix.txt");
-		this.nextItem = Item.BEAR;
-		// generateNextItem();
+		generateNextItem();
 	}
 
 	private void update(Cell lastAdded)
@@ -67,13 +66,14 @@ public class GameManager
 
 	private void generateNextItem()
 	{
+		// int prob = 42;
 		int prob = new Random().nextInt(100) + 1;
 		if ((prob >= 1) && (prob <= 2))
 			this.nextItem = Item.HUT;
 		else if ((prob >= 3) && (prob <= 6))
 			this.nextItem = Item.TREE;
 		else if ((prob >= 7) && (prob <= 24))
-			this.nextItem = Item.BEAR;
+			this.nextItem = Item.BUSH;
 		else if ((prob >= 25) && (prob <= 40))
 			this.nextItem = Item.BUSH;
 		else if ((prob >= 41) && (prob <= 100))

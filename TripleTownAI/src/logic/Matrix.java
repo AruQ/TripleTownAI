@@ -113,7 +113,7 @@ public class Matrix
 		{
 			this.emptyCell--;
 		}
-		this.score += itemType.getScore();
+		this.score += itemType.getScore() * 100;
 		this.matrix[y][x] = itemType;
 	}
 
@@ -144,5 +144,30 @@ public class Matrix
 			} while (!placeNextItem);
 			gameManager.print();
 		}
+	}
+
+	public List<Cell> getMaxElement()
+	{
+		int max = 0;
+		List<Cell> maxItemCells = new ArrayList<>();
+		for (int i = 0; i < DIMENSION; i++)
+			for (int j = 0; j < DIMENSION; j++)
+			{
+				Item item = this.matrix[i][j];
+				if (item.getScore() >= max)
+				{
+					if (item.getScore() > max)
+						maxItemCells.clear();
+					Cell maxItemCell = new Cell();
+					max = item.getScore();
+					maxItemCell.setX(j);
+					maxItemCell.setY(i);
+					maxItemCell.setType(item.getName());
+					maxItemCells.add(maxItemCell);
+				}
+			}
+		if (maxItemCells.isEmpty())
+			throw new RuntimeException("No maxItem");
+		return maxItemCells;
 	}
 }
