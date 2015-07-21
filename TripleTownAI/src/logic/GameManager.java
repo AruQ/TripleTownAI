@@ -19,7 +19,8 @@ public class GameManager
 
 	private void update(Cell lastAdded)
 	{
-		if (!lastAdded.getType().equals(Item.BEAR.getName()))
+		if (!lastAdded.getType().equals(Item.BEAR.getName())
+				|| !lastAdded.getType().equals(Item.ROCK.getName()))
 		{
 			List<Cell> update = WorldJDLV.update(this.matrix, lastAdded);
 			if (update.size() >= 3)
@@ -72,8 +73,10 @@ public class GameManager
 			this.nextItem = Item.HUT;
 		else if ((prob >= 3) && (prob <= 6))
 			this.nextItem = Item.TREE;
-		else if ((prob >= 7) && (prob <= 24))
+		else if ((prob >= 7) && (prob <= 20))
 			this.nextItem = Item.BUSH;
+		else if ((prob >= 21) && (prob <= 24))
+			this.nextItem = Item.CRISTAL;
 		else if ((prob >= 25) && (prob <= 40))
 			this.nextItem = Item.BUSH;
 		else if ((prob >= 41) && (prob <= 100))

@@ -1,0 +1,31 @@
+adjacent (X,Y,X,Y1):- matrix (X,Y,_),matrix (X,Y1,_), Y=Y1+1.
+adjacent (X,Y,X1,Y):- matrix (X,Y,_),matrix (X1,Y,_), X=X1+1.
+adjacent (X,Y,X1,Y1) :- adjacent (X1,Y1,X,Y).
+
+%trova le diagonali nella matrice
+diagonalAdjacent (X,Y,X1,Y1) :- matrix (X,Y,_),matrix (X1,Y1,_), X=X1+1, Y=Y1+1.
+diagonalAdjacent (X,Y,X1,Y1) :- matrix (X,Y,_),matrix (X1,Y1,_), X=X1+1, Y=Y1-1.
+diagonalAdjacent (X,Y,X1,Y1) :- diagonalAdjacent (X1,Y1,X,Y).
+
+allNeightbour(X,Y,X,Y,T):-matrix(X,Y,T),T!="Empty",T!="Bear".
+allNeightbour(XS,YS,X,Y,T):-allNeightbour(XS,YS,X1,Y1,T),adjacent(X1,Y1,X,Y),matrix(X,Y,T).
+
+neightbour(XS,YS,T):-#count{X,Y:allNeightbour(XS,YS,X,Y,T)}>1,matrix(XS,YS,T),T!="Empty",T!="Bear".
+
+diagonalNeightbour(XS,YS,XS1,YS1,T) :- matrix(XS,YS,T),T!="Empty",T!="Bear",matrix(XS1,YS1,T),diagonalAdjacent(XS,YS,XS1,YS1).
+possiblePlaceCristal(X,Y,T) :- diagonalNeightbour (XS,YS,XS1,YS1,T), adjacent (X,Y,XS,YS), adjacent (X,Y,XS1,YS1),matrix (X,Y,"Empty").
+
+possiblePlaceCristal(X, Y, T):-matrix(X,Y,"Empty"),adjacent(X,Y,X1,Y1),matrix(X1,Y1,T),adjacent(X1,Y1,X2,Y2),matrix(X2,Y2,T1),X2!=X1.
+possiblePlaceCristal(X, Y, T):-matrix(X,Y,"Empty"),adjacent(X,Y,X1,Y1),matrix(X1,Y1,T),adjacent(X1,Y1,X2,Y2),matrix(X2,Y2,T1),Y2!=Y1.
+
+possiblePlaceCristal(X,Y,T):- neightbour(X1,Y1,T),adjacent(X1,Y1,X,Y),matrix(X,Y,"Empty").
+existsPossiblePlaceCristal :- #count {X,Y : possiblePlaceCristal(X,Y,T)}>0.
+
+place (X,Y,"Rock") | notPlace(X,Y,"Rock"):- not existsPossiblePlaceCristal, matrix(X,Y,"Empty").
+place(X,Y,T)|notPlace(X,Y,T):-possiblePlaceCristal(X,Y,T).
+place(X,Y,T)|notPlace(X,Y,T):- possiblePlaceCristal(X,Y,T).
+:-not #count{X,Y,T:place(X,Y,T)}=1.
+
+:~notPlace(X,Y,T),item(T,_,P), existsPossiblePlaceCristal. [P:1]
+
+:~place(X,Y,T),adjacent(X,Y,X1,Y1),matrix(X1,Y1,T1),item(T,_,P),item(T1,_,P1),#absdiff(P1,P,Z), not existsPossiblePlaceCristal.[Z:1]

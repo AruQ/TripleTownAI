@@ -2,6 +2,8 @@ package logic;
 
 public class Item
 {
+	public final static Item CRISTAL = new Item("Cristal", "Cristal", 10);
+	public final static Item ROCK = new Item("Rock", "Rock", 0);
 	public final static Item EMPTY = new Item("Empty", "Empty", 0);
 	public final static Item TRIPLE_CASTLE = new Item("Triple castle", "Triple castle", 9);
 	public final static Item FLOATING_CASTLE = new Item("Floating castle", "Triple castle", 8);

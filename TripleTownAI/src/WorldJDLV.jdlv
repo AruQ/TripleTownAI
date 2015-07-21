@@ -4,6 +4,22 @@ public class WorldJDLV
 	{
 	}
 	
+	public static java.util.List<Cell> placeCristal(Matrix matrix,Item nextItem)
+	{
+		java.util.List<Item> items=ItemManager.getInstance().getItems();
+		java.util.List<Cell> cells = matrix.toCells();
+		String nextItemName=nextItem.getName();
+		java.util.List<Cell> places= new java.util.ArrayList();
+		<# (placeCristal)
+		IN = cells::matrix;
+		IN = items::item;
+		IN = nextItemName::nextItem;
+		OUT = places :: place;
+		FILE="C:/Users/Alessandro/Unical/Artificial Intelligence/Workspace/TripleTown/tripleTownAICristal.dl";//append DLV code content in the selected
+		#>
+		return places;
+	}
+	
 	public static java.util.List<Cell> update(Matrix matrix, Cell lastAdded)
 	{
 		

@@ -112,3 +112,5 @@ adjacentElement (X,Y) :- matrix (X,Y,T), adjacentElement (X1,Y1), adjacent (X,Y,
 %:~ not hasEmptyCellAdjacentNextItem , not hasSameTypeCellAdjacentNextItem. [1:22]
 
 %place (0,0,"Empty").
+
+:~place(X,Y,_),adjacent(X,Y,X1,Y1),matrix(X1,Y1,T1),item(T,_,P),item(T1,_,P1),nextItem(T),#absdiff(P1,P,Z).[Z:12]

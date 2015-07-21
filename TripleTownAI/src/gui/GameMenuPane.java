@@ -20,6 +20,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import logic.Cell;
 import logic.GameManager;
+import logic.Item;
 import logic.WorldJDLV;
 
 public class GameMenuPane extends Pane
@@ -82,14 +83,8 @@ public class GameMenuPane extends Pane
 			{
 				if (GameMenuPane.this.gameManager.isGameOver())
 					return;
-				List<Cell> aiPlayer = WorldJDLV.aiPlayer(GameMenuPane.this.gameManager.getMatrix(),
-						GameMenuPane.this.gameManager.getMatrix().getMaxElement(),
-						GameMenuPane.this.gameManager.getNextItem());
-				if (aiPlayer.isEmpty())
-					throw new RuntimeException("No element from AI");
-				Cell cell = aiPlayer.get(0);
-				GameMenuPane.this.gameManager.placeNextItem(cell.getX(), cell.getY());
-				GameMenuPane.this.mainGamePanel.graphicUpdate();
+				GameMenuPane.this.callAI();
+
 			}
 
 		});
@@ -114,31 +109,43 @@ public class GameMenuPane extends Pane
 			public void handle(MouseEvent mouseEvent)
 			{
 
-				while (!GameMenuPane.this.gameManager.isGameOver())
+				while (true)
 				{
-
-					List<Cell> aiPlayer = WorldJDLV.aiPlayer(
-							GameMenuPane.this.gameManager.getMatrix(),
-							GameMenuPane.this.gameManager.getMatrix().getMaxElement(),
-							GameMenuPane.this.gameManager.getNextItem());
-					if (aiPlayer.isEmpty())
-						throw new RuntimeException("No element from AI");
-					Cell cell = aiPlayer.get(0);
-					GameMenuPane.this.gameManager.placeNextItem(cell.getX(), cell.getY());
-					GameMenuPane.this.mainGamePanel.graphicUpdate();
-					try
-					{
-						Thread.sleep(5000);
-					} catch (InterruptedException e)
-					{
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					break;
+					if (!GameMenuPane.this.callAI())
+						break;
 				}
+				System.out.println("Game over");
+
 			}
 
 		});
+	}
+
+	private boolean callAI()
+	{
+		Item nextItem = GameMenuPane.this.gameManager.getNextItem();
+		List<Cell> aiPlayer = null;
+		if (nextItem == Item.CRISTAL)
+		{
+			aiPlayer = WorldJDLV.placeCristal(this.gameManager.getMatrix(), nextItem);
+			nextItem.setName(aiPlayer.get(0).getType());
+		}
+		else
+		{
+			aiPlayer = WorldJDLV.aiPlayer(GameMenuPane.this.gameManager.getMatrix(),
+					GameMenuPane.this.gameManager.getMatrix().getMaxElement(), nextItem);
+		}
+		if (aiPlayer.isEmpty())
+		{
+			// FIXME isgameover
+			System.out.println("Non ci sono mosse");
+			return false;
+			// throw new RuntimeException("No element from AI");
+		}
+		Cell cell = aiPlayer.get(0);
+		GameMenuPane.this.gameManager.placeNextItem(cell.getX(), cell.getY());
+		GameMenuPane.this.mainGamePanel.graphicUpdate();
+		return true;
 	}
 
 	private void addNextItemText()
