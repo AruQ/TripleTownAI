@@ -3,29 +3,29 @@ adjacent (X,Y,X,Y1):- matrix (X,Y,_),matrix (X,Y1,_), Y=Y1+1.
 adjacent (X,Y,X1,Y):- matrix (X,Y,_),matrix (X1,Y,_), X=X1+1.
 adjacent (X,Y,X1,Y1) :- adjacent (X1,Y1,X,Y).
 
-%trova le diagonali nella matrice
+%trova le celle diagonalmente adiacenti nella matrice
 diagonalAdjacent (X,Y,X1,Y1) :- matrix (X,Y,_),matrix (X1,Y1,_), X=X1+1, Y=Y1+1.
 diagonalAdjacent (X,Y,X1,Y1) :- matrix (X,Y,_),matrix (X1,Y1,_), X=X1+1, Y=Y1-1.
 diagonalAdjacent (X,Y,X1,Y1) :- diagonalAdjacent (X1,Y1,X,Y).
 
-%per ogni oggetto nella matrice che non sia un Bear trova tutte le celle raggiungibili con lo stesso oggetto
+%per ogni oggetto nella matrice che non sia un Bear, trova tutti i gruppi dello stesso oggetto
 allNeightbour(X,Y,X,Y,T):-matrix(X,Y,T),T!="Empty",T!="Bear".
 allNeightbour(XS,YS,X,Y,T):-allNeightbour(XS,YS,X1,Y1,T),adjacent(X1,Y1,X,Y),matrix(X,Y,T).
 
-%trova gli oggetti che hanno almeno un oggetti vicino dello stesso tipo
+%trova gli oggetti che hanno almeno un oggetto vicino dello stesso tipo
 neightbour(XS,YS,T):-#count{X,Y:allNeightbour(XS,YS,X,Y,T)}>1,matrix(XS,YS,T),T!="Empty",T!="Bear".
 
 %trova gli oggetti adiacenti diagonalmente dello stesso tipo
 diagonalNeightbour(XS,YS,XS1,YS1,T) :- matrix(XS,YS,T),T!="Empty",T!="Bear",matrix(XS1,YS1,T),diagonalAdjacent(XS,YS,XS1,YS1).
 
-%trova le celle libere agli aggetti diagonalmente adiacenti dove è possibile posizionare il cristal per raggrupparli
+%trova le celle libere dove è possibile posizionare il cristal per raggruppare gruppi di oggetti adiacenti diagonalmente
 possiblePlaceCristal(X,Y,T) :- diagonalNeightbour (XS,YS,XS1,YS1,T), adjacent (X,Y,XS,YS), adjacent (X,Y,XS1,YS1),matrix (X,Y,"Empty").
 
 %trova le celle empty che sono comprese tra oggetti dello stesso tipo
 possiblePlaceCristal(X, Y, T):-matrix(X,Y,"Empty"),adjacent(X,Y,X1,Y1),matrix(X1,Y1,T),adjacent(X,Y,X2,Y2),matrix(X2,Y2,T),X2!=X1,T!="Empty",T!="Bear".
 possiblePlaceCristal(X, Y, T):-matrix(X,Y,"Empty"),adjacent(X,Y,X1,Y1),matrix(X1,Y1,T),adjacent(X,Y,X2,Y2),matrix(X2,Y2,T),Y2!=Y1,T!="Empty",T!="Bear".
 
-%trova le celle adiacenti agli oggetti dello stesso tipo calcolati precedentemente dove è possibile posizionare il cristal
+%trova le celle adiacenti a gruppi di oggetti dello stesso tipo dove è possibile posizionare il cristal
 possiblePlaceCristal(X,Y,T):- neightbour(X1,Y1,T),adjacent(X1,Y1,X,Y),matrix(X,Y,"Empty").
 
 %verifica se esiste almeno una cella dove è possibile posizionare il cristal in modo da avere un raggruppamento
@@ -36,14 +36,13 @@ place (X,Y,"Rock") | notPlace(X,Y,"Rock"):- not existsPossiblePlaceCristal, matr
 
 %se esiste una possibile chiusura il cristallo si deve posizionare in una di queste celle
 place(X,Y,T)|notPlace(X,Y,T):-possiblePlaceCristal(X,Y,T).
-place(X,Y,T)|notPlace(X,Y,T):- possiblePlaceCristal(X,Y,T).
 :-not #count{X,Y,T:place(X,Y,T)}=1.
 
 %si deve cercare di raggruppare l'oggetto di massimo peso
 :~notPlace(X,Y,T),item(T,_,P), existsPossiblePlaceCristal. [P:1]
 
-%le roccie devono essere posizionare il più lontano possibile dagli oggetti di valore più alto
+%le rocce devono essere posizionare il più lontano possibile dagli oggetti di valore più alto
 :~place(X,Y,T),adjacent(X,Y,X1,Y1),matrix(X1,Y1,T1),item(T,_,P),item(T1,_,P1),#absdiff(P1,P,Z), not existsPossiblePlaceCristal.[Z:1]
 
-%si cerca di posizionare le roccie nelle vicinanze di altre rocce
+%si cerca di posizionare le rocce nelle vicinanze di altre rocce
 :~place(X,Y,"Rock"),not adjacent(X,Y,X1,Y1),matrix(X1,Y1,"Rock"), not existsPossiblePlaceCristal.[1:2]

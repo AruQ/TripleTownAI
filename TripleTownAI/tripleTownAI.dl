@@ -17,7 +17,7 @@ diagonalAdjacent (X,Y,X1,Y1) :- matrix (X,Y,_),matrix (X1,Y1,_), X=X1+1, Y=Y1+1.
 diagonalAdjacent (X,Y,X1,Y1) :- matrix (X,Y,_),matrix (X1,Y1,_), X=X1+1, Y=Y1-1.
 diagonalAdjacent (X,Y,X1,Y1) :- diagonalAdjacent (X1,Y1,X,Y).
 
-%trova le celle adiacenti
+%trova le celle adiacenti nella matrice
 adjacent (X,Y,X,Y1):- matrix (X,Y,_),matrix (X,Y1,_), Y=Y1+1.
 adjacent (X,Y,X1,Y):- matrix (X,Y,_),matrix (X1,Y,_), X=X1+1.
 adjacent (X,Y,X1,Y1) :- adjacent (X1,Y1,X,Y).
@@ -29,71 +29,73 @@ sameElement(X,Y,T):-matrix(X,Y,T),nextItem(T).
 neightbour(X,Y,X,Y,T):-sameElement(X,Y,T).
 neightbour(XS,YS,X,Y,T):-neightbour(XS,YS,X1,Y1,T),adjacent(X1,Y1,X,Y),matrix(X,Y,T).
 
-%trova se esiste un oggetto uguale a quello da posizionare solo senza adiacenti del suo stesso tipo
+%trova se esiste un oggetto uguale a quello da posizionare isolato
 aloneElement(XS,YS,T):-sameElement(XS,YS,T),#count{X,Y:neightbour(XS,YS,X,Y,T)}=1.
 
 %cerca di posizionare il prossimo oggetto vicino a un oggetto isolato dello stesso tipo 
-:~aloneElement(XS,YS,_),not adjacent(XS,YS,X,Y),place(X,Y,"Empty"). [1:20]
+:~aloneElement(XS,YS,_),not adjacent(XS,YS,X,Y),place(X,Y,"Empty"). [1:5]
 
-%adiacenza di due elementi delllo stesso tipo di nextItem
+%gruppi di due elementi dello stesso tipo dell'oggetto da posizionare
 pairAdjacentSameElement (XS,YS,XS1,YS1) :- sameElement(XS,YS,T),matrix(XS1,YS1,T),adjacent(XS,YS,XS1,YS1).
-:~ pairAdjacentSameElement(XS,YS,XS1,YS1), not adjacent(XS,YS,X,Y),place(X,Y,_). [1:20]
 
+%cerca di posizionare l'oggetto adiacente ad un gruppo di due elementi
+:~ pairAdjacentSameElement(XS,YS,XS1,YS1), not adjacent(XS,YS,X,Y),place(X,Y,_). [1:5]
+
+%gruppi di due elementi dello stesso tipo dell'oggetto da posizionare adiacenti diagonalmente
 pairDiagonalSameElement (XS,YS,XS1,YS1) :- sameElement(XS,YS,T),matrix(XS1,YS1,T),diagonalAdjacent(XS,YS,XS1,YS1).
 
-%cespuglio
-%elementi successivi all'elememnto da posizionare
+%elementi successivi all'oggetto da posizionare
 consecutiveItem(X,Y,Succ):-nextItem(T),item(T,Succ,_),matrix(X,Y,Succ).
 
-%coppie di nextnextitem
+%coppie di elementi successivi
 pairNextNextItem (XS,YS,XS1,YS1) :- consecutiveItem(XS,YS,T),matrix(XS1,YS1,T),adjacent(XS,YS,XS1,YS1).
 
-%cella adiacente a UNO E UNO SOLO elemento dello stesso tipo del prossimo elemento da posizionare adiacente al Place
-possiblePlaceAdjacentSameElement(X,Y):-X1!=X2,matrix(X,Y,"Empty"),adjacent(X,Y,X1,Y1),matrix(X1,Y1,T),nextItem(T),not matrix(X2,Y2,T),adjacent(X1,Y1,X2,Y2).
-possiblePlaceAdjacentSameElement(X,Y):-Y1!=Y2,matrix(X,Y,"Empty"),adjacent(X,Y,X1,Y1),matrix(X1,Y1,T),nextItem(T),not matrix(X2,Y2,T),adjacent(X1,Y1,X2,Y2).
+%cella adiacente a UNO E UNO SOLO elemento dello stesso tipo dell'oggetto da posizionare adiacente al Place
+%possiblePlaceAdjacentSameElement(X,Y):-X1!=X2,matrix(X,Y,"Empty"),adjacent(X,Y,X1,Y1),matrix(X1,Y1,T),nextItem(T),not matrix(X2,Y2,T),adjacent(X1,Y1,X2,Y2).
+%possiblePlaceAdjacentSameElement(X,Y):-Y1!=Y2,matrix(X,Y,"Empty"),adjacent(X,Y,X1,Y1),matrix(X1,Y1,T),nextItem(T),not matrix(X2,Y2,T),adjacent(X1,Y1,X2,Y2).
 
-%cella adiacente a ALMENO DUE elementi dello stesso tipo del prossimo elemento da posizionare adiacente al Place
+%cella adiacente vuota ad ALMENO DUE elementi dello stesso tipo dell'oggetto da posizionare 
 possiblePlacePairAdjacentSameElement(X,Y):-X1!=X2,matrix(X,Y,"Empty"),adjacent(X,Y,X1,Y1),matrix(X1,Y1,T),nextItem(T),matrix(X2,Y2,T),adjacent(X1,Y1,X2,Y2).
 possiblePlacePairAdjacentSameElement(X,Y):-Y1!=Y2,matrix(X,Y,"Empty"),adjacent(X,Y,X1,Y1),matrix(X1,Y1,T),nextItem(T),matrix(X2,Y2,T),adjacent(X1,Y1,X2,Y2).
 
-%cella adiacente a entrambe le celle di una coppia diagonale dello stesso elemento da posizionare
+%cella adiacente vuota a entrambe le celle di una coppia diagonale dello stesso elemento da posizionare
 possiblePlacePairAdjacentSameElement(X,Y):-matrix(X,Y,"Empty"),pairDiagonalSameElement(XS,YS,XS1,YS1), adjacent(X,Y,XS,YS),adjacent(X,Y,XS1,YS1).
 
-%non è possibile posizionare il next item adiacente a un gruppo di next next item se non ci sono almeno due elementi del nextIteme
-:~pairNextNextItem(XS,YS,XS1,YS1),place(X,Y,"Empty"),adjacent(X,Y,XS,YS), not possiblePlacePairAdjacentSameElement(X,Y). [1:21]
-:~place(X,Y,_),#absdiff(Y,Y1,Z),pairNextNextItem(X1,Y1,_,_). [Z:20]
-:~place(X,Y,_),#absdiff(X,X1,Z),pairNextNextItem(X1,Y1,_,_). [Z:20]
+%non vorrei posizionare il nuovo oggetto adiacente a un gruppo di elementi successivi se non ci sono almeno due elementi dell'oggetto da posizionare
+:~pairNextNextItem(XS,YS,XS1,YS1),place(X,Y,"Empty"),adjacent(X,Y,XS,YS), not possiblePlacePairAdjacentSameElement(X,Y). [1:6]
 
-%===============================================================================================================
-nextNextNextItem(SuccSucc) :- nextItem(T),item(T,Succ,_),item(Succ,SuccSucc,_). %controllare non sappiamo che volevamo fare
-possibleClosureNextNextItem (X,Y) :- possiblePlacePairAdjacentSameElement(X,Y), adjacent(X,Y,XS2,YS2), matrix (XS2,YS2,T3), nextNextNextItem(T3).%controllare non sappiamo che volevamo fare
-%:~pairNextNextItem(XS,YS,XS1,YS1),place(X,Y,"Empty"),adjacent(X,Y,XS,YS), not possibleClosureNextNextItem(X,Y). [1:22]
-%===============================================================================================================
+%vorrei posizionare il nuovo oggetto il più vicino possibile ad un gruppo di elementi successivi
+:~place(X,Y,_),#absdiff(Y,Y1,Z),pairNextNextItem(X1,Y1,_,_). [Z:5]
+:~place(X,Y,_),#absdiff(X,X1,Z),pairNextNextItem(X1,Y1,_,_). [Z:5]
 
-%adiacenti diagonalmente di nextnextItem
+% gruppi di elementi successivi all'oggetto da posizionare adiacenti diagonalmente
 pairDiagonalNextNextItem (XS,YS,XS1,YS1) :- consecutiveItem(XS,YS,T),matrix(XS1,YS1,T),diagonalAdjacent(XS,YS,XS1,YS1).
+
+%cella adiacente vuota a entrambe le celle di una coppia diagonale del tipo successivo dell'elemento da posizionare
 possiblePlaceDiagonalNextNextItem(X,Y) :- pairDiagonalNextNextItem (XS,YS,XS1,YS1), adjacent (X,Y,XS,YS), adjacent (X,Y,XS1,YS1),matrix (X,Y,"Empty").
-:~place(X,Y,"Empty"),possiblePlaceDiagonalNextNextItem(X,Y), not possiblePlacePairAdjacentSameElement(X,Y). [1:21]
+
+%posiziona il terzo elemento nella cella adiacente alla coppia diagonale di elementi successivi
+:~place(X,Y,"Empty"),possiblePlaceDiagonalNextNextItem(X,Y), not possiblePlacePairAdjacentSameElement(X,Y). [1:6]
 
 
-%cerca di andare verso il centro
-%:~place(X,Y,_),#absdiff(Y,Y1,Z),+(Z,P,R),center(X1,Y1),nextItem(T),item(T,_,P). [R:11] 
-%:~place(X,Y,_),#absdiff(X,X1,Z),+(Z,P,R),center(X1,Y1),nextItem(T),item(T,_,P). [R:11]
-
+%cornice matrice
 matrixFrame(X,Y):-matrix(X,Y,_),X=0.
 matrixFrame(X,Y):-matrix(X,Y,_),Y=0.
 matrixFrame(X,Y):-matrix(X,Y,_),X=5.
 matrixFrame(X,Y):-matrix(X,Y,_),Y=5.
-:~place(X,Y,_),matrixFrame(X,Y),#absdiff(P,Y,Z),nextItem(T),item(T,_,P),#prec(Z,R). [R:11] 
-:~place(X,Y,_),matrixFrame(X,Y),#absdiff(P,X,Z),nextItem(T),item(T,_,P),#prec(Z,R). [R:11] 
 
-%elementi isolati di nextNextElement
+%cerca di posizionare gli oggetti con peso minore il più vicino possibile alla cornice
+:~place(X,Y,_),matrixFrame(X,Y),#absdiff(P,Y,Z),nextItem(T),item(T,_,P),#prec(Z,R). [R:1] 
+:~place(X,Y,_),matrixFrame(X,Y),#absdiff(P,X,Z),nextItem(T),item(T,_,P),#prec(Z,R). [R:1] 
+
+%elementi isolati del tipo successivo all'elemento da posizionare
 aloneNextNextItem (XS,YS,XS1,YS1) :- consecutiveItem(XS,YS,T),not matrix(XS1,YS1,T),adjacent(XS,YS,XS1,YS1).
 
-%non è possibile posizionare il next item adiacente a un next next item se non ci sono almeno due elementi del nextIteme
-:~aloneNextNextItem(XS,YS,XS1,YS1),place(X,Y,"Empty"),adjacent(X,Y,XS,YS), not possiblePlacePairAdjacentSameElement(X,Y). [1:19]
-:~place(X,Y,_),#absdiff(Y,Y1,Z),aloneNextNextItem(X1,Y1,_,_). [Z:18]
-:~place(X,Y,_),#absdiff(X,X1,Z),aloneNextNextItem(X1,Y1,_,_). [Z:18]
+%non vorrei posizionare il nuovo oggetto adiacente a un elemento successivo se non ci sono almeno due elementi dell'oggetto da posizionare
+:~aloneNextNextItem(XS,YS,XS1,YS1),place(X,Y,"Empty"),adjacent(X,Y,XS,YS), not possiblePlacePairAdjacentSameElement(X,Y). [1:4]
+%vorrei posizionare il nuovo oggetto il più vicino possibile ad un elemento successivo
+:~place(X,Y,_),#absdiff(Y,Y1,Z),aloneNextNextItem(X1,Y1,_,_). [Z:3]
+:~place(X,Y,_),#absdiff(X,X1,Z),aloneNextNextItem(X1,Y1,_,_). [Z:3]
 
 
 %trova le celle adiacenti all'elemento da posizionare che sono vuote o sono dello stesso tipo dell'elemento da posizionare
@@ -101,16 +103,9 @@ adjacentElement (X,Y) :- place(X,Y,_).
 adjacentElement (X,Y) :- matrix (X,Y,"Empty"), adjacentElement (X1,Y1), adjacent (X,Y,X1,Y1).
 adjacentElement (X,Y) :- matrix (X,Y,T), adjacentElement (X1,Y1), adjacent (X,Y,X1,Y1), nextItem(T).
 
-%controlla che non si creino gruppi di due celle isolate
-:~ #count {X,Y : adjacentElement (X,Y)} <=2. [1:23]
+%controlla che non venga posizionato in un gruppo di due celle isolate
+:~ #count {X,Y : adjacentElement (X,Y)} <=2. [1:7]
 
+%cerca di non affiancare oggetti con alta differenza di peso
+:~place(X,Y,_),adjacent(X,Y,X1,Y1),matrix(X1,Y1,T1),item(T,_,P),item(T1,_,P1),nextItem(T),#absdiff(P1,P,Z).[Z:2]
 
-%un elemento è chiuso se non ha elementi dello stesso tipo vicini e non ha celle adiacenti empty
-%hasEmptyCellAdjacentNextItem:- #count {X1,Y1 : adjacent(X, Y, X1, Y1), matrix (X1,Y1,"Empty")} >0, #int(N), place (X,Y,_).
-%hasSameTypeCellAdjacentNextItem:- #count {X1,Y1 : adjacent(X, Y, X1, Y1), matrix (X1,Y1,T), nextItem(T)} >0, place (X,Y,_).
-
-%:~ not hasEmptyCellAdjacentNextItem , not hasSameTypeCellAdjacentNextItem. [1:22]
-
-%place (0,0,"Empty").
-
-:~place(X,Y,_),adjacent(X,Y,X1,Y1),matrix(X1,Y1,T1),item(T,_,P),item(T1,_,P1),nextItem(T),#absdiff(P1,P,Z).[Z:12]
