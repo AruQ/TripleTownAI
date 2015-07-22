@@ -25,12 +25,10 @@ public class GamePane extends Pane
 	private final ImageLoader imageLoader = ImageLoader.getInstance();
 	private final GameManager gameManager;
 
-	private final Matrix matrix;
-
 	private final Group itemGroup = new Group();
 	private final Group utilGroup = new Group();
 	public static int PANE_DIMENSION = MAX_IMAGE_DIMENSION * Matrix.DIMENSION;
-	private GameMenuPane gameMenuPane;
+	private final GameMenuPane gameMenuPane;
 
 	// private final int screenWidth = Screen.getMainScreen().getWidth();
 	// private final int screenHeight = Screen.getMainScreen().getHeight();
@@ -39,21 +37,20 @@ public class GamePane extends Pane
 	{
 		this.gameMenuPane = gameMenuPane;
 		this.gameManager = gameManager;
-		this.matrix = gameManager.getMatrix();
 		setBackground(new Background(new BackgroundImage(new Image(
 				"file:Sprites\\grass-pattern.png"), BackgroundRepeat.REPEAT,
 				BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
 		setPrefSize(PANE_DIMENSION, PANE_DIMENSION);
 
-		getChildren().add(this.itemGroup);
-		getChildren().add(this.utilGroup);
+		getChildren().add(itemGroup);
+		getChildren().add(utilGroup);
 		loadImages();
 
 		update();
 		drawMatrix();
 
 		setOnMouseReleased(new EventHandler<MouseEvent>()
-		{
+				{
 			@Override
 			public void handle(MouseEvent mouseEvent)
 			{
@@ -62,22 +59,24 @@ public class GamePane extends Pane
 				if (GamePane.this.gameManager.placeNextItem(x, y))
 					GamePane.this.update();
 			}
-		});
+				});
 	}
 
 	private void drawMatrix()
 	{
-		double distanceBetweenLinesVertical = getPrefWidth() / this.matrix.getDimension();
-		double distanceBetweenLinesOrizzontal = getPrefHeight() / this.matrix.getDimension();
-		for (int i = 0; i < this.matrix.getDimension(); i++)
+		double distanceBetweenLinesVertical = getPrefWidth()
+				/ gameManager.getMatrix().getDimension();
+		double distanceBetweenLinesOrizzontal = getPrefHeight()
+				/ gameManager.getMatrix().getDimension();
+		for (int i = 0; i < gameManager.getMatrix().getDimension(); i++)
 		{
 
-			this.utilGroup.getChildren().addAll(
+			utilGroup.getChildren().addAll(
 					new Line(0, i * distanceBetweenLinesOrizzontal, getPrefWidth(), i
 							* distanceBetweenLinesOrizzontal));
-			for (int j = 0; j < this.matrix.getDimension(); j++)
+			for (int j = 0; j < gameManager.getMatrix().getDimension(); j++)
 			{
-				this.utilGroup.getChildren().addAll(
+				utilGroup.getChildren().addAll(
 						new Line(j * distanceBetweenLinesVertical, 0, j
 								* distanceBetweenLinesVertical, getPrefHeight()));
 			}
@@ -86,25 +85,25 @@ public class GamePane extends Pane
 
 	public void update()
 	{
-		this.itemGroup.getChildren().clear();
-		for (int i = 0; i < this.matrix.getDimension(); i++)
+		itemGroup.getChildren().clear();
+		for (int i = 0; i < gameManager.getMatrix().getDimension(); i++)
 		{
-			for (int j = 0; j < this.matrix.getDimension(); j++)
+			for (int j = 0; j < gameManager.getMatrix().getDimension(); j++)
 			{
-				if (this.matrix.getItemFromPosition(j, i) == Item.EMPTY)
+				if (gameManager.getMatrix().getItemFromPosition(j, i) == Item.EMPTY)
 					continue;
 
-				ImageView imageView = new ImageView(this.imageLoader.getImage(this.matrix
+				ImageView imageView = new ImageView(imageLoader.getImage(gameManager.getMatrix()
 						.getItemFromPosition(j, i).getName()));
-				double graphicX = ((j * getPrefWidth()) / this.matrix.getDimension())
+				double graphicX = ((j * getPrefWidth()) / gameManager.getMatrix().getDimension())
 						+ ((MAX_IMAGE_DIMENSION - imageView.getImage().getWidth()) / 2);
-				double graphicY = ((i * getPrefHeight()) / this.matrix.getDimension())
+				double graphicY = ((i * getPrefHeight()) / gameManager.getMatrix().getDimension())
 						+ ((MAX_IMAGE_DIMENSION - imageView.getImage().getHeight()) / 2);
 				imageView.relocate(graphicX, graphicY);
-				this.itemGroup.getChildren().addAll(imageView);
+				itemGroup.getChildren().addAll(imageView);
 			}
 		}
-		this.gameMenuPane.update();
+		gameMenuPane.update();
 	}
 
 	private void loadImages()
@@ -113,7 +112,7 @@ public class GamePane extends Pane
 		for (Item item : items)
 		{
 			if (item != Item.EMPTY)
-				this.imageLoader.insertImage(item.getName(), "file:Sprites\\"
+				imageLoader.insertImage(item.getName(), "file:Sprites\\"
 						+ item.getName().toLowerCase() + ".png");
 		}
 

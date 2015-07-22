@@ -44,12 +44,12 @@ try{
 _JDLV_INVOCATION_placeCristal=it.unical.mat.wrapper.DLVWrapper.getInstance().createInvocation(it.unical.mat.jdlv.util.JdlvProperties.getInstance().getDlvExecutablePath());
 _JDLV_PROGRAM_placeCristal.addText(_JDLV_PROGRAM_BUFFER_placeCristal.toString());
 _JDLV_PROGRAM_placeCristal.getFiles().clear();
-_JDLV_PROGRAM_placeCristal.addFile("C:/Users/Alessandro/Unical/Artificial Intelligence/Workspace/TripleTown/tripleTownAICristal.dl");
+_JDLV_PROGRAM_placeCristal.addFile("./tripleTownAICristal.dl");
 _JDLV_INVOCATION_placeCristal.setNumberOfModels(1);
 _JDLV_PROGRAM_BUFFER_placeCristal.append("");
 _JDLV_INVOCATION_placeCristal.setInputProgram(_JDLV_PROGRAM_placeCristal);
 it.unical.mat.wrapper.ModelBufferedHandler _BUFFERED_HANDLER_placeCristal=new it.unical.mat.wrapper.ModelBufferedHandler(_JDLV_INVOCATION_placeCristal);
-it.unical.mat.jdlv.program.JDLV_Logger.getInstance().logInfoMessage("Start execution placeCristal program: executablePath='"+it.unical.mat.jdlv.util.JdlvProperties.getInstance().getDlvExecutablePath()+"', options='"+_JDLV_INVOCATION_placeCristal.getOptionsString()+"'"+'\n'+"Code execution: "+it.unical.mat.jdlv.program.JDLV_Logger.getInstance().getPrettyCode(_JDLV_INVOCATION_placeCristal.getInputProgram().getCompleteText(),0)+'\n'+"Files execution: C:/Users/Alessandro/Unical/Artificial Intelligence/Workspace/TripleTown/tripleTownAICristal.dl");
+it.unical.mat.jdlv.program.JDLV_Logger.getInstance().logInfoMessage("Start execution placeCristal program: executablePath='"+it.unical.mat.jdlv.util.JdlvProperties.getInstance().getDlvExecutablePath()+"', options='"+_JDLV_INVOCATION_placeCristal.getOptionsString()+"'"+'\n'+"Code execution: "+it.unical.mat.jdlv.program.JDLV_Logger.getInstance().getPrettyCode(_JDLV_INVOCATION_placeCristal.getInputProgram().getCompleteText(),0)+'\n'+"Files execution: ./tripleTownAICristal.dl");
 _JDLV_INVOCATION_placeCristal.run();
 while(_BUFFERED_HANDLER_placeCristal.hasMoreModels()){
 it.unical.mat.wrapper.Model _temporary_JDLV_MODELplaceCristal=_BUFFERED_HANDLER_placeCristal.nextModel();
@@ -305,12 +305,12 @@ try{
 _JDLV_INVOCATION_aiPlayer=it.unical.mat.wrapper.DLVWrapper.getInstance().createInvocation(it.unical.mat.jdlv.util.JdlvProperties.getInstance().getDlvExecutablePath());
 _JDLV_PROGRAM_aiPlayer.addText(_JDLV_PROGRAM_BUFFER_aiPlayer.toString());
 _JDLV_PROGRAM_aiPlayer.getFiles().clear();
-_JDLV_PROGRAM_aiPlayer.addFile("C:/Users/Alessandro/Unical/Artificial Intelligence/Workspace/TripleTown/tripleTownAI.dl");
+_JDLV_PROGRAM_aiPlayer.addFile("./tripleTownAI.dl");
 _JDLV_INVOCATION_aiPlayer.setNumberOfModels(1);
 _JDLV_PROGRAM_BUFFER_aiPlayer.append("");
 _JDLV_INVOCATION_aiPlayer.setInputProgram(_JDLV_PROGRAM_aiPlayer);
 it.unical.mat.wrapper.ModelBufferedHandler _BUFFERED_HANDLER_aiPlayer=new it.unical.mat.wrapper.ModelBufferedHandler(_JDLV_INVOCATION_aiPlayer);
-it.unical.mat.jdlv.program.JDLV_Logger.getInstance().logInfoMessage("Start execution aiPlayer program: executablePath='"+it.unical.mat.jdlv.util.JdlvProperties.getInstance().getDlvExecutablePath()+"', options='"+_JDLV_INVOCATION_aiPlayer.getOptionsString()+"'"+'\n'+"Code execution: "+it.unical.mat.jdlv.program.JDLV_Logger.getInstance().getPrettyCode(_JDLV_INVOCATION_aiPlayer.getInputProgram().getCompleteText(),0)+'\n'+"Files execution: C:/Users/Alessandro/Unical/Artificial Intelligence/Workspace/TripleTown/tripleTownAI.dl");
+it.unical.mat.jdlv.program.JDLV_Logger.getInstance().logInfoMessage("Start execution aiPlayer program: executablePath='"+it.unical.mat.jdlv.util.JdlvProperties.getInstance().getDlvExecutablePath()+"', options='"+_JDLV_INVOCATION_aiPlayer.getOptionsString()+"'"+'\n'+"Code execution: "+it.unical.mat.jdlv.program.JDLV_Logger.getInstance().getPrettyCode(_JDLV_INVOCATION_aiPlayer.getInputProgram().getCompleteText(),0)+'\n'+"Files execution: ./tripleTownAI.dl");
 _JDLV_INVOCATION_aiPlayer.run();
 while(_BUFFERED_HANDLER_aiPlayer.hasMoreModels()){
 it.unical.mat.wrapper.Model _temporary_JDLV_MODELaiPlayer=_BUFFERED_HANDLER_aiPlayer.nextModel();

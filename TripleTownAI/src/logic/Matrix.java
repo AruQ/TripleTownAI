@@ -12,14 +12,14 @@ public class Matrix
 {
 	private int emptyCell = 0;
 	public static final int DIMENSION = 6;
-	private final Item[][] matrix = new Item[this.DIMENSION][this.DIMENSION];
+	private final Item[][] matrix = new Item[DIMENSION][DIMENSION];
 	private int score = 0;
 
 	public Matrix()
 	{
-		for (int i = 0; i < this.matrix.length; i++)
+		for (int i = 0; i < matrix.length; i++)
 		{
-			for (int j = 0; j < this.matrix[i].length; j++)
+			for (int j = 0; j < matrix[i].length; j++)
 			{
 				setItemToMatrix(j, i, Item.EMPTY);
 			}
@@ -28,19 +28,23 @@ public class Matrix
 
 	public Integer getScore()
 	{
-		return this.score;
+		return score;
 	}
 
+	public void setScore(int score)
+	{
+		this.score = score;
+	}
 	public void print()
 	{
-		for (int i = 0; i < this.matrix.length; i++)
+		for (int i = 0; i < matrix.length; i++)
 		{
-			for (int j = 0; j < this.matrix[i].length; j++)
+			for (int j = 0; j < matrix[i].length; j++)
 			{
-				if (this.matrix[i][j] == Item.EMPTY)
+				if (matrix[i][j] == Item.EMPTY)
 					System.out.print("|     |" + "  ");
 				else
-					System.out.print("|" + this.matrix[i][j].getName() + "|" + "  ");
+					System.out.print("|" + matrix[i][j].getName() + "|" + "  ");
 			}
 			System.out.println();
 		}
@@ -57,9 +61,9 @@ public class Matrix
 			while ((line = buffer.readLine()) != null)
 			{
 				String[] vals = line.trim().split("\\s+");
-				for (int j = 0; j < this.DIMENSION; j++)
+				for (int j = 0; j < DIMENSION; j++)
 				{
-					this.matrix[i][j] = ItemManager.getInstance().getItemFromID(
+					matrix[i][j] = ItemManager.getInstance().getItemFromID(
 							Integer.parseInt(vals[j]));
 				}
 				i++;
@@ -82,17 +86,17 @@ public class Matrix
 
 	public int getDimension()
 	{
-		return this.DIMENSION;
+		return DIMENSION;
 	}
 
 	public List<Cell> toCells()
 	{
 		List<Cell> cells = new ArrayList<>();
-		for (int i = 0; i < this.matrix.length; i++)
+		for (int i = 0; i < matrix.length; i++)
 		{
-			for (int j = 0; j < this.matrix[i].length; j++)
+			for (int j = 0; j < matrix[i].length; j++)
 			{
-				cells.add(new Cell(j, i, this.matrix[i][j].getName()));
+				cells.add(new Cell(j, i, matrix[i][j].getName()));
 			}
 		}
 		return cells;
@@ -100,26 +104,26 @@ public class Matrix
 
 	public boolean isFull()
 	{
-		return this.emptyCell == 0;
+		return emptyCell == 0;
 	}
 
 	public void setItemToMatrix(int x, int y, Item itemType)
 	{
 		if (itemType == Item.EMPTY)
 		{
-			this.emptyCell++;
+			emptyCell++;
 		}
 		else
 		{
-			this.emptyCell--;
+			emptyCell--;
 		}
-		this.score += itemType.getScore() * 100;
-		this.matrix[y][x] = itemType;
+		score += itemType.getScore() * 100;
+		matrix[y][x] = itemType;
 	}
 
 	public Item getItemFromPosition(int x, int y)
 	{
-		return this.matrix[y][x];
+		return matrix[y][x];
 	}
 
 	public static void main(String[] args) throws NumberFormatException, IOException
@@ -153,7 +157,7 @@ public class Matrix
 		for (int i = 0; i < DIMENSION; i++)
 			for (int j = 0; j < DIMENSION; j++)
 			{
-				Item item = this.matrix[i][j];
+				Item item = matrix[i][j];
 				if (item.getScore() >= max)
 				{
 					if (item.getScore() > max)

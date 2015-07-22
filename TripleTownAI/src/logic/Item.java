@@ -3,7 +3,7 @@ package logic;
 public class Item
 {
 	public final static Item CRISTAL = new Item("Cristal", "Cristal", 10);
-	public final static Item ROCK = new Item("Rock", "Rock", 0);
+
 	public final static Item EMPTY = new Item("Empty", "Empty", 0);
 	public final static Item TRIPLE_CASTLE = new Item("Triple castle", "Triple castle", 9);
 	public final static Item FLOATING_CASTLE = new Item("Floating castle", "Triple castle", 8);
@@ -20,6 +20,10 @@ public class Item
 	public final static Item CHURCH = new Item("Church", "Cathedral", 3);
 	public final static Item CATHEDRAL = new Item("Cathedral", "Cathedral", 4);
 
+	public final static Item ROCK = new Item("Rock", "Mountain", 0);
+	public final static Item MOUNTAIN = new Item("Mountain", "Chest", 1);
+	public final static Item CHEST = new Item("Chest", "Chest", 2);
+
 	private String name;
 	private String descendant;
 	private int score;
@@ -33,7 +37,7 @@ public class Item
 
 	public String getDescendant()
 	{
-		return this.descendant;
+		return descendant;
 	}
 
 	public void setDescendant(String descendant)
@@ -43,7 +47,7 @@ public class Item
 
 	public String getName()
 	{
-		return this.name;
+		return name;
 	}
 
 	public void setName(String name)
@@ -53,7 +57,7 @@ public class Item
 
 	public int getScore()
 	{
-		return this.score;
+		return score;
 	}
 
 	public void setScore(int score)
@@ -66,8 +70,8 @@ public class Item
 	{
 		final int prime = 31;
 		int result = 1;
-		result = (prime * result) + ((this.name == null) ? 0 : this.name.hashCode());
-		result = (prime * result) + this.score;
+		result = (prime * result) + ((name == null) ? 0 : name.hashCode());
+		result = (prime * result) + score;
 		return result;
 	}
 
@@ -81,14 +85,14 @@ public class Item
 		if (getClass() != obj.getClass())
 			return false;
 		Item other = (Item) obj;
-		if (this.name == null)
+		if (name == null)
 		{
 			if (other.name != null)
 				return false;
 		}
-		else if (!this.name.equals(other.name))
+		else if (!name.equals(other.name))
 			return false;
-		if (this.score != other.score)
+		if (score != other.score)
 			return false;
 		return true;
 	}

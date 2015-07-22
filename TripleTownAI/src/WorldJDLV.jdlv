@@ -15,7 +15,7 @@ public class WorldJDLV
 		IN = items::item;
 		IN = nextItemName::nextItem;
 		OUT = places :: place;
-		FILE="C:/Users/Alessandro/Unical/Artificial Intelligence/Workspace/TripleTown/tripleTownAICristal.dl";//append DLV code content in the selected
+		FILE="./tripleTownAICristal.dl";//append DLV code content in the selected
 		#>
 		return places;
 	}
@@ -91,7 +91,7 @@ public class WorldJDLV
 		IN = nextItemName::nextItem;
 		IN = maxElems::maxElement;
 		OUT = places :: place;
-		FILE="C:/Users/Alessandro/Unical/Artificial Intelligence/Workspace/TripleTown/tripleTownAI.dl";//append DLV code content in the selected
+		FILE="./tripleTownAI.dl";//append DLV code content in the selected
 		#>
 		return places;
 	}

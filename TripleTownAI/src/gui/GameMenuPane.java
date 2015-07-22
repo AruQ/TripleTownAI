@@ -32,7 +32,7 @@ public class GameMenuPane extends Pane
 	private final ImageView imageViewNextItem;
 	final static double GAME_MENU_PANEL_DIMENSION = (GamePane.PANE_DIMENSION * 30) / 100;
 	private final Font font = Font.loadFont("file:Sprites\\Font\\DroidSans-Bold.ttf", 28);
-	private MainGameApplication mainGamePanel;
+	private final MainGameApplication mainGamePanel;
 
 	public GameMenuPane(MainGameApplication mainGamePanel, GameManager gameManager)
 	{
@@ -40,14 +40,15 @@ public class GameMenuPane extends Pane
 		this.gameManager = gameManager;
 		addHelpButton();
 
-		addRectangle(5, 220, GAME_MENU_PANEL_DIMENSION - 10, 200);
-		this.imageViewNextItem = new ImageView();
-		this.imageViewNextItem.relocate((GAME_MENU_PANEL_DIMENSION - 100) / 2, 300);
-		getChildren().add(this.imageViewNextItem);
+		addRectangle(5, 260, GAME_MENU_PANEL_DIMENSION - 10, 200);
+		imageViewNextItem = new ImageView();
+		imageViewNextItem.relocate((GAME_MENU_PANEL_DIMENSION - 100) / 2, 340);
+		getChildren().add(imageViewNextItem);
 
 		addScore();
 		addNextItemText();
 		addSolveButton();
+		addRestartButton();
 
 		setBackground(new Background(new BackgroundImage(new Image(
 				"file:Sprites\\backgroundMenu.jpg"), BackgroundRepeat.REPEAT,
@@ -67,57 +68,77 @@ public class GameMenuPane extends Pane
 
 	private void addScore()
 	{
-		addRectangle(5, 50, GAME_MENU_PANEL_DIMENSION - 10, 120);
+		addRectangle(5, 90, GAME_MENU_PANEL_DIMENSION - 10, 120);
 		ImageView iconScore = new ImageView(new Image("file:Sprites\\iconScore.png"));
-		iconScore.relocate(5, 70);
+		iconScore.relocate(5, 110);
 		getChildren().add(iconScore);
 
-		this.textScore = new Text();
-		this.textScore.setFont(this.font);
-		this.textScore.relocate(100, 100);
-		this.textScore.setFill(Color.WHITE);
-		getChildren().add(this.textScore);
+		textScore = new Text();
+		textScore.setFont(font);
+		textScore.relocate(100, 140);
+		textScore.setFill(Color.WHITE);
+		getChildren().add(textScore);
 	}
 
 	private void addHelpButton()
 	{
 		Button helpButton = new Button();
-		helpButton.setGraphic(new ImageView(new Image("file:Sprites\\helpText.png")));
+		helpButton.setGraphic(new ImageView(new Image("file:Sprites\\helpButton.png")));
 		helpButton.setStyle("-fx-background-color: transparent;");
 		helpButton.setPrefSize(120, 80);
 
-		helpButton.relocate((GAME_MENU_PANEL_DIMENSION - helpButton.getPrefWidth()) / 2, 500);
+		helpButton.relocate((GAME_MENU_PANEL_DIMENSION - helpButton.getPrefWidth()) / 2, 490);
 		getChildren().add(helpButton);
 
 		helpButton.setOnMouseReleased(new EventHandler<MouseEvent>()
-		{
+				{
 			@Override
 			public void handle(MouseEvent mouseEvent)
 			{
-				if (GameMenuPane.this.gameManager.isGameOver())
+				if (gameManager.isGameOver())
 					return;
 				GameMenuPane.this.callAI();
 
 			}
 
-		});
+				});
+	}
+
+	private void addRestartButton()
+	{
+		Button restartButton = new Button();
+		restartButton.setGraphic(new ImageView(new Image("file:Sprites\\restartButton.png")));
+		restartButton.setStyle("-fx-background-color: transparent;");
+		restartButton.setPrefSize(100, 80);
+
+		restartButton.relocate((GAME_MENU_PANEL_DIMENSION - restartButton.getPrefWidth()) / 2.5,
+				10);
+		getChildren().add(restartButton);
+
+		restartButton.setOnMouseReleased(new EventHandler<MouseEvent>()
+				{
+			@Override
+			public void handle(MouseEvent mouseEvent)
+			{
+				gameManager.reset();
+
+			}
+				});
+
 	}
 
 	private void addSolveButton()
 	{
-		Text solveButton = new Text("Solve Button");
-		solveButton.setFont(this.font);
-		solveButton.relocate((GAME_MENU_PANEL_DIMENSION - 140) / 2, 600);
-		solveButton.setFill(Color.WHITE);
-		DropShadow ds = new DropShadow();
-		ds.setOffsetY(3.0f);
-		ds.setColor(Color.CHOCOLATE);
-		solveButton.setEffect(ds);
-		solveButton.setCache(true);
+		Button solveButton = new Button();
+		solveButton.setGraphic(new ImageView(new Image("file:Sprites\\solveButton.png")));
+		solveButton.setStyle("-fx-background-color: transparent;");
+		solveButton.setPrefSize(100, 80);
+
+		solveButton.relocate((GAME_MENU_PANEL_DIMENSION - solveButton.getPrefWidth()) / 2.5, 560);
 		getChildren().add(solveButton);
 
 		solveButton.setOnMouseReleased(new EventHandler<MouseEvent>()
-		{
+				{
 			@Override
 			public void handle(MouseEvent mouseEvent)
 			{
@@ -147,7 +168,7 @@ public class GameMenuPane extends Pane
 					}
 				}).start();
 			}
-		});
+				});
 
 	}
 
@@ -157,10 +178,10 @@ public class GameMenuPane extends Pane
 		List<Cell> aiPlayer = null;
 		if (nextItem == Item.CRISTAL)
 		{
-			aiPlayer = WorldJDLV.placeCristal(this.gameManager.getMatrix(), nextItem);
+			aiPlayer = WorldJDLV.placeCristal(gameManager.getMatrix(), nextItem);
 			Item cristalReplace = ItemManager.getInstance().getItemFromName(
 					aiPlayer.get(0).getType());
-			this.gameManager.setNextItem(cristalReplace);
+			gameManager.setNextItem(cristalReplace);
 		}
 		else
 		{
@@ -182,8 +203,8 @@ public class GameMenuPane extends Pane
 	private void addNextItemText()
 	{
 		Text nextItem = new Text("Next item");
-		nextItem.setFont(this.font);
-		nextItem.relocate((GAME_MENU_PANEL_DIMENSION - 140) / 2, 250);
+		nextItem.setFont(font);
+		nextItem.relocate((GAME_MENU_PANEL_DIMENSION - 140) / 2, 290);
 		nextItem.setFill(Color.WHITE);
 		DropShadow ds = new DropShadow();
 		ds.setOffsetY(3.0f);
@@ -209,8 +230,8 @@ public class GameMenuPane extends Pane
 
 	public void update()
 	{
-		this.textScore.setText(GameMenuPane.this.gameManager.getMatrix().getScore().toString());
-		this.imageViewNextItem.setImage(ImageLoader.getInstance().getImage(
-				this.gameManager.getNextItem().getName()));
+		textScore.setText(GameMenuPane.this.gameManager.getMatrix().getScore().toString());
+		imageViewNextItem.setImage(ImageLoader.getInstance().getImage(
+				gameManager.getNextItem().getName()));
 	}
 }
