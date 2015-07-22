@@ -2,6 +2,7 @@ package gui;
 
 import java.util.List;
 
+import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.effect.DropShadow;
@@ -21,6 +22,7 @@ import javafx.scene.text.Text;
 import logic.Cell;
 import logic.GameManager;
 import logic.Item;
+import logic.ItemManager;
 import logic.WorldJDLV;
 
 public class GameMenuPane extends Pane
@@ -50,6 +52,17 @@ public class GameMenuPane extends Pane
 		setBackground(new Background(new BackgroundImage(new Image(
 				"file:Sprites\\backgroundMenu.jpg"), BackgroundRepeat.REPEAT,
 				BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
+		AnimationTimer timer = new AnimationTimer()
+		{
+
+			@Override
+			public void handle(long now)
+			{
+				GameMenuPane.this.mainGamePanel.graphicUpdate();
+			};
+
+		};
+		timer.start();
 	}
 
 	private void addScore()
@@ -109,16 +122,33 @@ public class GameMenuPane extends Pane
 			public void handle(MouseEvent mouseEvent)
 			{
 
-				while (true)
+				new Thread(new Runnable()
 				{
-					if (!GameMenuPane.this.callAI())
-						break;
-				}
-				System.out.println("Game over");
 
+					@Override
+					public void run()
+					{
+						while (true)
+						{
+							if (!GameMenuPane.this.callAI())
+							{
+								System.out.println("Game over");
+								break;
+							}
+							// try
+							// {
+							// Thread.sleep(500);
+							// } catch (InterruptedException e)
+							// {
+							// // TODO Auto-generated catch block
+							// e.printStackTrace();
+							// }
+						}
+					}
+				}).start();
 			}
-
 		});
+
 	}
 
 	private boolean callAI()
@@ -128,7 +158,9 @@ public class GameMenuPane extends Pane
 		if (nextItem == Item.CRISTAL)
 		{
 			aiPlayer = WorldJDLV.placeCristal(this.gameManager.getMatrix(), nextItem);
-			nextItem.setName(aiPlayer.get(0).getType());
+			Item cristalReplace = ItemManager.getInstance().getItemFromName(
+					aiPlayer.get(0).getType());
+			this.gameManager.setNextItem(cristalReplace);
 		}
 		else
 		{
@@ -144,7 +176,6 @@ public class GameMenuPane extends Pane
 		}
 		Cell cell = aiPlayer.get(0);
 		GameMenuPane.this.gameManager.placeNextItem(cell.getX(), cell.getY());
-		GameMenuPane.this.mainGamePanel.graphicUpdate();
 		return true;
 	}
 

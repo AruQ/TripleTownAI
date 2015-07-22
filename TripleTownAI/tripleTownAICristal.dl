@@ -15,8 +15,8 @@ neightbour(XS,YS,T):-#count{X,Y:allNeightbour(XS,YS,X,Y,T)}>1,matrix(XS,YS,T),T!
 diagonalNeightbour(XS,YS,XS1,YS1,T) :- matrix(XS,YS,T),T!="Empty",T!="Bear",matrix(XS1,YS1,T),diagonalAdjacent(XS,YS,XS1,YS1).
 possiblePlaceCristal(X,Y,T) :- diagonalNeightbour (XS,YS,XS1,YS1,T), adjacent (X,Y,XS,YS), adjacent (X,Y,XS1,YS1),matrix (X,Y,"Empty").
 
-possiblePlaceCristal(X, Y, T):-matrix(X,Y,"Empty"),adjacent(X,Y,X1,Y1),matrix(X1,Y1,T),adjacent(X1,Y1,X2,Y2),matrix(X2,Y2,T1),X2!=X1.
-possiblePlaceCristal(X, Y, T):-matrix(X,Y,"Empty"),adjacent(X,Y,X1,Y1),matrix(X1,Y1,T),adjacent(X1,Y1,X2,Y2),matrix(X2,Y2,T1),Y2!=Y1.
+possiblePlaceCristal(X, Y, T):-matrix(X,Y,"Empty"),adjacent(X,Y,X1,Y1),matrix(X1,Y1,T),adjacent(X,Y,X2,Y2),matrix(X2,Y2,T),X2!=X1,T!="Empty",T!="Bear".
+possiblePlaceCristal(X, Y, T):-matrix(X,Y,"Empty"),adjacent(X,Y,X1,Y1),matrix(X1,Y1,T),adjacent(X,Y,X2,Y2),matrix(X2,Y2,T),Y2!=Y1,T!="Empty",T!="Bear".
 
 possiblePlaceCristal(X,Y,T):- neightbour(X1,Y1,T),adjacent(X1,Y1,X,Y),matrix(X,Y,"Empty").
 existsPossiblePlaceCristal :- #count {X,Y : possiblePlaceCristal(X,Y,T)}>0.

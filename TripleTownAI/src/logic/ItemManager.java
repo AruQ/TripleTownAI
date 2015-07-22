@@ -43,13 +43,14 @@ public class ItemManager
 		this.IDItems.put(6, Item.MANSION);
 		this.IDItems.put(7, Item.CASTLE);
 		this.IDItems.put(8, Item.FLOATING_CASTLE);
-		this.IDItems.put(9, Item.CRISTAL);
+		this.IDItems.put(9, Item.TRIPLE_CASTLE);
+		this.IDItems.put(10, Item.CRISTAL);
 
-		this.IDItems.put(10, Item.BEAR);
-		this.IDItems.put(11, Item.CHURCH);
-		this.IDItems.put(12, Item.CATHEDRAL);
-		this.IDItems.put(13, Item.TOMBSTONE);
-		this.IDItems.put(13, Item.ROCK);
+		this.IDItems.put(11, Item.BEAR);
+		this.IDItems.put(12, Item.CHURCH);
+		this.IDItems.put(13, Item.CATHEDRAL);
+		this.IDItems.put(14, Item.TOMBSTONE);
+		this.IDItems.put(15, Item.ROCK);
 
 	}
 
@@ -64,6 +65,7 @@ public class ItemManager
 		this.itemNames.put(Item.MANSION.getName(), Item.MANSION);
 		this.itemNames.put(Item.CASTLE.getName(), Item.CASTLE);
 		this.itemNames.put(Item.FLOATING_CASTLE.getName(), Item.FLOATING_CASTLE);
+		this.itemNames.put(Item.TRIPLE_CASTLE.getName(), Item.TRIPLE_CASTLE);
 		this.itemNames.put(Item.CRISTAL.getName(), Item.CRISTAL);
 		this.itemNames.put(Item.ROCK.getName(), Item.ROCK);
 
@@ -85,6 +87,7 @@ public class ItemManager
 		this.items.add(Item.MANSION);
 		this.items.add(Item.CASTLE);
 		this.items.add(Item.FLOATING_CASTLE);
+		this.items.add(Item.TRIPLE_CASTLE);
 		this.items.add(Item.CRISTAL);
 		this.items.add(Item.ROCK);
 
@@ -106,6 +109,7 @@ public class ItemManager
 		this.descendants.put(Item.MANSION, Item.CASTLE);
 		this.descendants.put(Item.CASTLE, Item.FLOATING_CASTLE);
 		this.descendants.put(Item.FLOATING_CASTLE, Item.TRIPLE_CASTLE);
+		this.descendants.put(Item.TRIPLE_CASTLE, Item.TRIPLE_CASTLE);
 		this.descendants.put(Item.CRISTAL, Item.CRISTAL);
 		this.descendants.put(Item.ROCK, Item.ROCK);
 
